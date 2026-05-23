@@ -422,6 +422,8 @@ button {
 }
 
 .hero-scroll-frame {
+  --hero-saturation: 1;
+  --hero-contrast: 1;
   position: relative;
   z-index: 2;
   min-height: 100svh;
@@ -431,6 +433,7 @@ button {
     linear-gradient(180deg, rgba(255, 250, 244, 0.96), var(--cream-soft)),
     radial-gradient(circle at 50% 52%, rgba(128, 77, 250, 0.14), transparent 30rem);
   box-shadow: 0 0 0 rgba(21, 20, 18, 0);
+  filter: saturate(var(--hero-saturation)) contrast(var(--hero-contrast));
   transform-origin: center center;
   will-change: transform, filter;
 }

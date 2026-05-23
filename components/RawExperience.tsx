@@ -220,6 +220,7 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
           }
 
           gsap.set(".signature-path", { strokeDasharray: 1300, strokeDashoffset: 1300 });
+          gsap.set(".hero-scroll-frame", { "--hero-saturation": 1, "--hero-contrast": 1, clearProps: "filter" });
 
           const intro = gsap.timeline({ defaults: { ease: "power4.out" } });
           intro
@@ -242,11 +243,11 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
               scale: desktop ? 0.48 : 0.68,
               y: desktop ? 16 : 10,
               borderRadius: desktop ? 30 : 18,
-              filter: "saturate(0) contrast(1.06)",
               boxShadow: "0 32px 90px rgba(18, 7, 54, 0.45)",
               duration: 1,
             }, 0)
             .to(".hero-wordmark", { scale: 0.96, duration: 0.72 }, 0.12)
+            .to(".hero-scroll-frame", { "--hero-saturation": 0, "--hero-contrast": 1.06, duration: 0.58 }, 0.34)
             .to(".signature-stage", { autoAlpha: 1, duration: 0.16 }, 0.2)
             .to(".signature-path", { strokeDashoffset: 0, duration: 0.78 }, 0.22);
 
