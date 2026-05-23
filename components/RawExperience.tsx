@@ -244,7 +244,8 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
               start: "top top",
               end: desktop ? "+=1750" : "+=1200",
               pin: true,
-              scrub: 1,
+              scrub: true,
+              anticipatePin: 1,
             },
             defaults: { ease: "none" },
           })
