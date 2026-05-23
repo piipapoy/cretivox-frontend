@@ -106,8 +106,8 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
       const tiles = gsap.utils.toArray<HTMLElement>(".hero-tile");
       const xTo = cursor ? gsap.quickTo(cursor, "x", { duration: 0.35, ease: "power3" }) : null;
       const yTo = cursor ? gsap.quickTo(cursor, "y", { duration: 0.35, ease: "power3" }) : null;
-      const tiltX = gsap.utils.mapRange(0, window.innerWidth, -8, 8);
-      const tiltY = gsap.utils.mapRange(0, window.innerHeight, 7, -7);
+      const tiltX = gsap.utils.mapRange(0, window.innerWidth, -13, 13);
+      const tiltY = gsap.utils.mapRange(0, window.innerHeight, 10, -10);
       let activeTile = -1;
       let activeTileSet: number[] = [];
 
@@ -134,6 +134,8 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
           y: tiltY(event.clientY),
           rotateY: tiltX(event.clientX) * 0.8,
           rotateX: tiltY(event.clientY) * 0.7,
+          z: 34,
+          transformPerspective: 850,
           duration: 0.7,
           ease: "power3.out",
           overwrite: "auto",
@@ -215,11 +217,11 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
           if (reduce) {
             gsap.set(".hero-line, .hero-type-stage, .hero-lens-button, .scene-card, .portrait-frame", { autoAlpha: 1, clearProps: "transform" });
             gsap.set(".signature-stage", { autoAlpha: 0 });
-            gsap.set(".signature-path", { strokeDasharray: 1300, strokeDashoffset: 0 });
+            gsap.set(".signature-path", { strokeDasharray: 2600, strokeDashoffset: 0 });
             return;
           }
 
-          gsap.set(".signature-path", { strokeDasharray: 1300, strokeDashoffset: 1300 });
+          gsap.set(".signature-path", { strokeDasharray: 2600, strokeDashoffset: 2600 });
           gsap.set(".hero-scroll-frame", { "--hero-desat": 0 });
 
           const intro = gsap.timeline({ defaults: { ease: "power4.out" } });
@@ -454,8 +456,8 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
           </div>
         </div>
 
-        <svg className="signature-stage" viewBox="0 0 900 520" aria-hidden="true">
-          <path className="signature-path" d="M120 340 C240 210 360 180 450 245 C530 302 450 398 355 380 C245 358 315 190 505 112 C690 38 804 96 740 188 C690 260 536 312 378 356 C252 390 206 434 290 448 C414 468 600 390 774 316" />
+        <svg className="signature-stage" viewBox="0 0 504 214" aria-hidden="true">
+          <path className="signature-path" d="M77.649 133.389C79.8984 133.389 86.3056 131.889 114.502 116.121C138.087 102.932 177.938 74.86 200.108 59.0805C222.278 43.301 224.902 39.5521 226.629 36.6836C228.355 33.8151 229.105 31.9406 228.179 30.7875C227.254 29.6345 224.629 29.2596 215.217 37.5015C205.805 45.7434 189.685 62.6136 175.382 80.4891C161.079 98.3646 149.083 116.734 135.593 135.007C122.102 153.281 107.481 170.9 97.5126 181.664C83.5844 196.704 73.1503 200.778 64.4597 203.425C45.4648 209.211 21.3017 203.096 11.2194 196.467C6.62203 193.444 7.21486 185.68 8.15209 177.569C8.70638 172.772 10.9638 166.833 17.1779 159.245C23.392 151.656 33.889 142.659 59.7281 128.089C85.5672 113.519 126.43 93.6501 171.662 78.3533C216.893 63.0566 265.254 52.9345 291.479 47.7201C317.705 42.5057 320.329 42.5057 321.118 43.2555C327.722 49.527 300.755 61.398 280.602 72.1449C267.111 79.339 245.828 87.7654 234.075 92.9628C222.323 98.1601 220.449 99.2848 232.979 98.9269C245.51 98.5691 272.502 96.6946 295.404 93.8545C318.307 91.0144 336.302 87.2655 346.134 85.1468C355.966 83.0281 357.091 82.6532 354.671 82.835C338.741 84.0316 332.916 90.1965 328.719 95.3143C324.62 100.312 352.479 90.2647 369.559 80.0233C372.083 78.5098 372.632 79.9722 372.825 82.426C373.018 84.8799 373.018 88.6288 373.955 90.56C374.893 92.4913 376.767 92.4913 378.483 91.1792C389.445 82.7944 391.933 61.5116 396.273 40.0349C399.157 25.7594 401.737 4.31224 403.47 7.92483C405.202 11.5374 405.577 40.779 405.208 60.5289C404.839 80.2789 403.714 89.6512 401.822 98.2283C398.227 114.534 394.603 125.027 393.853 130.321C393.515 132.712 391.604 134.116 390.831 132.826C382.939 119.653 403.623 97.1263 416.148 84.1982C418.409 81.8645 419.573 80.4039 417.716 79.2565C411.766 75.5812 386.469 76.5868 381.112 76.5868C395.25 76.5868 443.611 76.5868 468.9 76.0245C494.188 75.4621 494.938 74.3375 495.71 73.1787M373.955 47.7201L426.596 30.7875" />
         </svg>
       </section>
 
