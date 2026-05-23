@@ -515,6 +515,7 @@ button {
 }
 
 .hero-wordmark {
+  --hero-lockup-scale: 0.92;
   position: relative;
   display: grid;
   margin: 0;
@@ -526,6 +527,8 @@ button {
   line-height: 0.72;
   text-transform: uppercase;
   text-rendering: geometricPrecision;
+  transform: scale(var(--hero-lockup-scale));
+  transform-origin: center center;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -631,6 +634,7 @@ button {
 
 @media (max-width: 1500px) {
   .hero-wordmark {
+    --hero-lockup-scale: 0.9;
     font-size: clamp(5.4rem, 13.5vw, 12rem);
   }
 

@@ -257,7 +257,7 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
               boxShadow: "0 32px 90px rgba(18, 7, 54, 0.45)",
               duration: 1,
             }, 0)
-            .to(".hero-wordmark", { scale: 0.96, duration: 0.72 }, 0.12)
+            .to(".hero-wordmark", { "--hero-lockup-scale": desktop ? 0.88 : 0.82, duration: 0.72 }, 0.12)
             .to(".hero-scroll-frame", { "--hero-desat": 1, duration: 0.58 }, 0.34)
             .to(".signature-stage", { autoAlpha: 1, duration: 0.16 }, 0.2)
             .to(signaturePaths, { strokeDashoffset: 0, duration: 0.78 }, 0.22);
