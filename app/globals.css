@@ -409,9 +409,10 @@ button {
 
 .hero-marquee-row.reverse {
   color: transparent;
-  -webkit-text-stroke: 1px rgba(255, 250, 244, 0.76);
+  -webkit-text-stroke: 1.55px rgba(255, 250, 244, 0.82);
   animation-direction: reverse;
   animation-duration: 24s;
+  paint-order: stroke fill;
   transform: translateX(-18%);
 }
 
@@ -422,10 +423,10 @@ button {
 }
 
 .hero-scroll-frame {
-  --hero-saturation: 1;
-  --hero-contrast: 1;
+  --hero-desat: 0;
   position: relative;
   z-index: 2;
+  isolation: isolate;
   min-height: 100svh;
   overflow: hidden;
   padding: 12vh clamp(18px, 4vw, 58px) 5vh;
@@ -433,9 +434,19 @@ button {
     linear-gradient(180deg, rgba(255, 250, 244, 0.96), var(--cream-soft)),
     radial-gradient(circle at 50% 52%, rgba(128, 77, 250, 0.14), transparent 30rem);
   box-shadow: 0 0 0 rgba(21, 20, 18, 0);
-  filter: saturate(var(--hero-saturation)) contrast(var(--hero-contrast));
   transform-origin: center center;
-  will-change: transform, filter;
+  will-change: transform;
+}
+
+.hero-scroll-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  pointer-events: none;
+  background: #777;
+  mix-blend-mode: saturation;
+  opacity: var(--hero-desat);
 }
 
 .hero-tile-field {
@@ -543,19 +554,21 @@ button {
 }
 
 .hero-line:nth-child(2) .hero-word {
-  -webkit-text-stroke: 1px var(--ink);
-  color: transparent;
+  -webkit-text-stroke: 1.45px var(--ink);
+  color: rgba(21, 20, 18, 0.025);
   font-style: italic;
+  paint-order: stroke fill;
 }
 
 .hero-line-accent {
   margin-top: 0.02em;
   color: var(--hero-accent);
-  font-family: var(--sans);
-  font-size: 0.31em;
-  font-weight: 800;
-  letter-spacing: -0.05em;
-  line-height: 0.9;
+  font-family: var(--serif);
+  font-size: 0.34em;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.065em;
+  line-height: 0.82;
   text-shadow: 0 0 30px rgba(128, 77, 250, 0.28);
 }
 
