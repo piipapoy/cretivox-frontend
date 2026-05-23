@@ -103,6 +103,7 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
 
       const cursor = root.querySelector<HTMLElement>(".dossier-cursor");
       const hero = root.querySelector<HTMLElement>(".dossier-hero");
+      const tileField = root.querySelector<HTMLElement>(".hero-tile-field");
       const tiles = gsap.utils.toArray<HTMLElement>(".hero-tile");
       const xTo = cursor ? gsap.quickTo(cursor, "x", { duration: 0.35, ease: "power3" }) : null;
       const yTo = cursor ? gsap.quickTo(cursor, "y", { duration: 0.35, ease: "power3" }) : null;
@@ -142,8 +143,13 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
           overwrite: "auto",
         });
 
-        if (hero && tiles.length) {
-          const rect = hero.getBoundingClientRect();
+        if (tileField && tiles.length) {
+          const rect = tileField.getBoundingClientRect();
+          if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) {
+            resetActiveTiles();
+            return;
+          }
+
           const x = event.clientX - rect.left;
           const y = event.clientY - rect.top;
           const columns = window.innerWidth <= 640 ? 6 : 12;
