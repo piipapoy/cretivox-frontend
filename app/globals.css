@@ -432,7 +432,7 @@ button {
     radial-gradient(circle at 50% 52%, rgba(128, 77, 250, 0.14), transparent 30rem);
   box-shadow: 0 0 0 rgba(21, 20, 18, 0);
   transform-origin: center center;
-  will-change: transform;
+  will-change: transform, filter;
 }
 
 .hero-tile-field {

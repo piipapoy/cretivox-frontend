@@ -231,7 +231,7 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
             scrollTrigger: {
               trigger: ".dossier-hero",
               start: "top top",
-              end: desktop ? "+=1350" : "+=900",
+              end: desktop ? "+=1750" : "+=1200",
               pin: true,
               scrub: 1,
             },
@@ -239,13 +239,14 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
           })
             .to(".hero-scroll-bg", { autoAlpha: 1, duration: 0.22 }, 0)
             .to(".hero-scroll-frame", {
-              scale: desktop ? 0.62 : 0.82,
-              y: desktop ? 30 : 18,
+              scale: desktop ? 0.48 : 0.68,
+              y: desktop ? 16 : 10,
               borderRadius: desktop ? 30 : 18,
+              filter: "saturate(0) contrast(1.06)",
               boxShadow: "0 32px 90px rgba(18, 7, 54, 0.45)",
               duration: 1,
             }, 0)
-            .to(".hero-wordmark", { autoAlpha: 0.42, scale: 0.94, duration: 0.72 }, 0.12)
+            .to(".hero-wordmark", { scale: 0.96, duration: 0.72 }, 0.12)
             .to(".signature-stage", { autoAlpha: 1, duration: 0.16 }, 0.2)
             .to(".signature-path", { strokeDashoffset: 0, duration: 0.78 }, 0.22);
 
