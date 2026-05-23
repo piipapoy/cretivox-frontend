@@ -429,13 +429,13 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
             <span>{marqueeText}</span>
           </div>
         </div>
+        <button className="hero-lock" type="button" onClick={onReset}>lock</button>
 
         <div className="hero-scroll-frame">
           <div className="hero-tile-field" aria-hidden="true">
             {heroTiles.map((tile) => <span className="hero-tile" key={tile} />)}
           </div>
           <Image className="hero-brand-logo" src="/assets/brand/cretivox-logo.png" alt="Cretivox" width={160} height={40} priority />
-          <button className="hero-lock" type="button" onClick={onReset}>lock</button>
 
           <div className="hero-type-stage">
             <h1 className="hero-wordmark" aria-label={`Arap ${heroModes[activeHero].word}`}>

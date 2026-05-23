@@ -488,7 +488,7 @@ button {
   position: absolute;
   right: clamp(18px, 4vw, 58px);
   top: 26px;
-  z-index: 6;
+  z-index: 10;
   border: 1px solid rgba(21, 20, 18, 0.28);
   border-radius: 999px;
   background: rgba(255, 250, 244, 0.6);
