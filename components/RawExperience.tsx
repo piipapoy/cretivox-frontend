@@ -121,6 +121,7 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
           boxShadow: "0 0 0 rgba(128, 77, 250, 0)",
           duration: 0.45,
           ease: "power3.out",
+          overwrite: true,
         });
         activeTile = -1;
         activeTileSet = [];
@@ -153,9 +154,12 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
 
           if (nextTile !== activeTile && tiles[nextTile]) {
             activeTile = nextTile;
+            const affectedTiles = [nextTile, nextTile - 1, nextTile + 1, nextTile - columns, nextTile + columns]
+              .filter((index) => tiles[index]);
+            const affectedTileSet = new Set(affectedTiles);
 
             if (activeTileSet.length) {
-              gsap.to(activeTileSet.map((index) => tiles[index]).filter(Boolean), {
+              gsap.to(activeTileSet.filter((index) => !affectedTileSet.has(index)).map((index) => tiles[index]).filter(Boolean), {
                 y: 0,
                 z: 0,
                 opacity: 0.28,
@@ -163,11 +167,10 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
                 boxShadow: "0 0 0 rgba(128, 77, 250, 0)",
                 duration: 0.45,
                 ease: "power3.out",
+                overwrite: true,
               });
             }
 
-            const affectedTiles = [nextTile, nextTile - 1, nextTile + 1, nextTile - columns, nextTile + columns]
-              .filter((index) => tiles[index]);
             activeTileSet = affectedTiles;
 
             gsap.to(affectedTiles.map((index) => tiles[index]), {
@@ -179,6 +182,7 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
               duration: 0.28,
               stagger: 0.015,
               ease: "power3.out",
+              overwrite: true,
             });
           }
         }
