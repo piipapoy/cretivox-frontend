@@ -11,17 +11,17 @@ type LoginGateProps = {
 export default function LoginGate({ onUnlock }: LoginGateProps) {
   const [username, setUsername] = useState("emilys");
   const [password, setPassword] = useState("emilyspass");
-  const [status, setStatus] = useState("API lock armed. Use the brief credentials.");
+  const [status, setStatus] = useState("Use the sample login from the brief. Nothing fancy yet.");
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setLoading(true);
-    setStatus("Contacting dummy JWT endpoint...");
+    setStatus("Sending the login request...");
 
     try {
       const result = await loginWithDummyJwt(username, password);
-      setStatus(`Access granted for ${result.firstName}. Token received.`);
+      setStatus(`Token came back. Opening the page for ${result.firstName}.`);
       window.setTimeout(onUnlock, 650);
     } catch (error) {
       setStatus(error instanceof Error ? error.message : "Login failed.");
@@ -49,12 +49,12 @@ export default function LoginGate({ onUnlock }: LoginGateProps) {
           <div className="login-copy">
             <p className="eyebrow">CIE S2B5 / Frontend</p>
             <h1>
-              RAW SIGNAL
-              <span>needs a token first.</span>
+              RAW MODE
+              <span>opens after login.</span>
             </h1>
             <p>
-              Before the page opens, it proves the API requirement: a real POST request to the
-              supplied login endpoint, then the experience unlocks.
+              The brief gives extra points for API login, so the site starts here. Real request,
+              real token, then the page opens.
             </p>
           </div>
 
@@ -78,7 +78,7 @@ export default function LoginGate({ onUnlock }: LoginGateProps) {
               />
             </label>
             <button type="submit" disabled={loading}>
-              {loading ? "Checking token" : "Unlock website"}
+              {loading ? "Checking" : "Open the page"}
             </button>
             <p className="status-line">{status}</p>
           </form>
