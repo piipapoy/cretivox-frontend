@@ -414,6 +414,7 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
     <main className="dossier" ref={container}>
       <div className="dossier-cursor" aria-hidden="true" />
       <div className="progress-line" aria-hidden="true"><span className="progress-fill" /></div>
+      <button className="hero-lock" type="button" onClick={onReset}>lock</button>
       <div className="cloud-layer" aria-hidden="true" />
 
       <section className="dossier-hero" aria-label="Arap Cretivox intro">
@@ -429,7 +430,6 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
             <span>{marqueeText}</span>
           </div>
         </div>
-        <button className="hero-lock" type="button" onClick={onReset}>lock</button>
 
         <div className="hero-scroll-frame">
           <div className="hero-tile-field" aria-hidden="true">
