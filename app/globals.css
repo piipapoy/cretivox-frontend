@@ -578,7 +578,7 @@ button {
   font-weight: 900;
   font-style: normal;
   letter-spacing: -0.075em;
-  line-height: 0.88;
+  line-height: 0.9;
   text-shadow: 0 0 30px rgba(128, 77, 250, 0.28);
 }
 
@@ -663,6 +663,491 @@ button {
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-width: 13;
+}
+
+.intro-story {
+  position: relative;
+  z-index: 3;
+  min-height: 100svh;
+  overflow: hidden;
+  isolation: isolate;
+  margin-top: -1px;
+  background:
+    radial-gradient(circle at 20% -4%, rgba(181, 157, 248, 0.66), transparent 32rem),
+    radial-gradient(circle at 84% 10%, rgba(181, 157, 248, 0.72), transparent 30rem),
+    radial-gradient(circle at 18% 82%, rgba(58, 30, 158, 0.84), transparent 36rem),
+    linear-gradient(180deg, #b59df8 0%, #875eff 13%, #5c31c8 48%, #251053 100%);
+  color: var(--cream-soft);
+}
+
+.intro-story::before {
+  content: "";
+  position: absolute;
+  inset: -18vh 0 auto;
+  z-index: 1;
+  height: 34vh;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(181, 157, 248, 0), rgba(181, 157, 248, 0.42) 54%, rgba(135, 94, 255, 0));
+  filter: blur(18px);
+}
+
+.intro-story-bg {
+  position: absolute;
+  inset: -1px 0 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 250, 244, 0.052) 0 1px, transparent 1px 114px),
+    repeating-linear-gradient(0deg, rgba(255, 250, 244, 0.04) 0 1px, transparent 1px 92px),
+    radial-gradient(circle at 50% 0%, rgba(255, 250, 244, 0.12), transparent 24rem);
+  opacity: 0.74;
+}
+
+.intro-contours {
+  position: absolute;
+  inset: -8vh 0 0;
+  z-index: 1;
+  width: 100%;
+  height: 108%;
+  pointer-events: none;
+  opacity: 0.86;
+}
+
+.intro-contours path {
+  fill: none;
+  stroke: rgba(255, 250, 244, 0.14);
+  stroke-width: 1.2;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+.intro-copy-left,
+.intro-copy-right,
+.intro-front,
+.intro-side,
+.intro-center-copy,
+.intro-photo-cards {
+  position: absolute;
+  z-index: 3;
+}
+
+.intro-copy-left {
+  left: clamp(24px, 6vw, 100px);
+  top: 13vh;
+  width: min(54vw, 820px);
+}
+
+.intro-copy-left .mono-kicker,
+.intro-center-copy .mono-kicker {
+  color: rgba(255, 250, 244, 0.7);
+}
+
+.intro-lead {
+  display: grid;
+  gap: 0.02em;
+  overflow: hidden;
+  margin: 12px 0 0;
+  font-family: var(--serif);
+  font-size: clamp(4.2rem, 8.6vw, 10.6rem);
+  font-weight: 900;
+  letter-spacing: -0.08em;
+  line-height: 0.82;
+  text-transform: uppercase;
+}
+
+.intro-word-small {
+  width: fit-content;
+  border: 1px solid rgba(255, 250, 244, 0.42);
+  border-radius: 999px;
+  padding: 0.32em 0.48em 0.28em;
+  font-family: var(--mono);
+  font-size: 0.11em;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1;
+}
+
+.intro-word-name {
+  color: var(--cream-soft);
+  font-size: 1.12em;
+  line-height: 0.74;
+}
+
+.intro-word-line {
+  font-family: var(--plain);
+  font-size: 0.36em;
+  font-weight: 900;
+  letter-spacing: -0.065em;
+  line-height: 0.94;
+}
+
+.intro-word-line strong {
+  color: var(--hero-accent-soft);
+  font: inherit;
+}
+
+.intro-word-line.muted {
+  color: rgba(255, 250, 244, 0.58);
+  font-weight: 700;
+}
+
+.intro-word {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+.intro-copy-right {
+  right: clamp(24px, 6vw, 96px);
+  top: 28vh;
+  width: min(33vw, 520px);
+}
+
+.intro-copy-right span:not(.intro-word) {
+  display: inline-flex;
+  margin-bottom: 18px;
+  border: 1px solid rgba(255, 250, 244, 0.38);
+  border-radius: 999px;
+  padding: 9px 12px;
+  color: rgba(255, 250, 244, 0.72);
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.intro-habit {
+  display: grid;
+  gap: 0.06em;
+  margin: 0;
+  color: rgba(255, 250, 244, 0.92);
+  font-family: var(--plain);
+  font-size: clamp(2.2rem, 4.2vw, 5.6rem);
+  font-weight: 900;
+  letter-spacing: -0.075em;
+  line-height: 0.86;
+  text-transform: uppercase;
+}
+
+.intro-habit-soft,
+.intro-habit-note {
+  color: rgba(255, 250, 244, 0.58);
+  font-family: var(--mono);
+  font-size: 0.22em;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1.45;
+  text-transform: uppercase;
+}
+
+.intro-habit-note {
+  max-width: 360px;
+  margin-top: 0.7em;
+  color: rgba(255, 250, 244, 0.72);
+}
+
+.intro-front,
+.intro-side {
+  overflow: visible;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  will-change: transform, opacity, filter;
+}
+
+.intro-front {
+  left: 50%;
+  bottom: -3vh;
+  width: min(24vw, 360px);
+  aspect-ratio: 9 / 16;
+  transform: translateX(-50%);
+}
+
+.intro-front::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 1vh;
+  z-index: -1;
+  width: 68%;
+  height: 42%;
+  border-radius: 999px;
+  background: rgba(18, 7, 54, 0.34);
+  filter: blur(34px);
+  transform: translateX(-50%);
+}
+
+.intro-side {
+  top: 14vh;
+  width: min(25vw, 360px);
+  height: 72vh;
+  overflow: hidden;
+  border: 1px solid rgba(255, 250, 244, 0.16);
+  border-radius: 999px;
+  background: rgba(255, 250, 244, 0.045);
+  box-shadow: inset 0 0 0 1px rgba(255, 250, 244, 0.06), 0 34px 78px rgba(18, 7, 54, 0.22);
+  backdrop-filter: blur(4px);
+}
+
+.intro-side-left {
+  left: clamp(-8px, 3vw, 58px);
+}
+
+.intro-side-right {
+  right: clamp(-8px, 3vw, 58px);
+}
+
+.intro-front img,
+.intro-side img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 34px 54px rgba(18, 7, 54, 0.34)) saturate(0.92) contrast(1.06);
+}
+
+.intro-front img {
+  object-fit: contain;
+}
+
+.intro-side img {
+  width: 138%;
+  max-width: none;
+  object-fit: cover;
+  opacity: 0.96;
+}
+
+.intro-side-left img {
+  object-position: 51% 18%;
+  transform: translateX(-15%) scale(1.06);
+}
+
+.intro-side-right img {
+  object-position: 49% 18%;
+  transform: translateX(-12%) scale(1.06);
+}
+
+.intro-photo-card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.9) contrast(1.05);
+}
+
+.intro-center-copy {
+  left: 50%;
+  top: 50%;
+  width: min(46vw, 680px);
+  text-align: center;
+  transform: translate(-50%, -50%);
+}
+
+.intro-center-copy h2 {
+  margin: 14px 0 0;
+  font-family: var(--serif);
+  font-size: clamp(2.5rem, 4.9vw, 5.9rem);
+  font-weight: 900;
+  letter-spacing: -0.075em;
+  line-height: 0.88;
+}
+
+.intro-photo-cards {
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  pointer-events: none;
+  perspective: 900px;
+}
+
+.intro-photo-card {
+  position: relative;
+  overflow: visible;
+  width: min(17vw, 238px);
+  aspect-ratio: 0.72;
+  margin: 0 clamp(-18px, -1.15vw, -10px);
+  border: 0;
+  border-radius: 18px;
+  background: var(--cream-soft);
+  box-shadow: 0 18px 44px rgba(18, 7, 54, 0.28), 7px 7px 0 rgba(181, 157, 248, 0.32);
+  padding: 8px;
+  pointer-events: auto;
+  will-change: transform, opacity, filter;
+  scale: 1;
+  translate: 0 0;
+  transition: scale 220ms var(--ease-out), translate 220ms var(--ease-out), filter 220ms var(--ease-out), box-shadow 220ms var(--ease-out);
+}
+
+.intro-photo-card:hover {
+  scale: 1.1;
+  translate: 0 -16px;
+  filter: saturate(1.08) contrast(1.04);
+  box-shadow: 0 34px 74px rgba(18, 7, 54, 0.42), 10px 10px 0 rgba(181, 157, 248, 0.5);
+  z-index: 8;
+}
+
+.intro-card-left {
+  z-index: 1;
+}
+
+.intro-card-center {
+  z-index: 3;
+  width: min(18.5vw, 266px);
+}
+
+.intro-card-right {
+  z-index: 2;
+}
+
+.intro-card-tape {
+  position: absolute;
+  left: 50%;
+  top: -14px;
+  z-index: 3;
+  width: 70px;
+  height: 28px;
+  border: 1px solid rgba(255, 250, 244, 0.35);
+  border-radius: 3px;
+  background: rgba(255, 250, 244, 0.42);
+  transform: translateX(-50%) rotate(-3deg);
+  backdrop-filter: blur(8px);
+}
+
+.intro-card-center .intro-card-tape {
+  transform: translateX(-50%) rotate(4deg);
+}
+
+.intro-photo-card img {
+  overflow: hidden;
+  border-radius: 13px;
+  background: #d9d3cc;
+}
+
+.intro-card-caption {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  border-radius: 8px;
+  background: rgba(21, 20, 18, 0.82);
+  color: var(--cream-soft);
+  padding: 9px 10px;
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  backdrop-filter: blur(10px);
+}
+
+.intro-card-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 8vh;
+  margin: 0;
+  border: 1px solid rgba(255, 250, 244, 0.2);
+  border-radius: 999px;
+  background: rgba(18, 7, 54, 0.26);
+  color: rgba(255, 250, 244, 0.72);
+  padding: 9px 12px;
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transform: translateX(-50%);
+  backdrop-filter: blur(10px);
+}
+
+.intro-photo-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: grid;
+  grid-template-columns: 72px minmax(240px, 520px) 72px;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(12px, 2vw, 26px);
+  padding: clamp(18px, 4vw, 56px);
+  background: rgba(18, 7, 54, 0.74);
+  backdrop-filter: blur(18px);
+}
+
+.intro-modal-card {
+  position: relative;
+  overflow: hidden;
+  margin: 0;
+  width: min(78vw, 520px);
+  max-height: 84vh;
+  aspect-ratio: 9 / 16;
+  border: 2px solid rgba(255, 250, 244, 0.72);
+  border-radius: 26px;
+  background: var(--ink);
+  box-shadow: 0 42px 120px rgba(0, 0, 0, 0.45);
+}
+
+.intro-modal-card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.intro-modal-card figcaption {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 18px;
+  display: flex;
+  justify-content: space-between;
+  border-radius: 12px;
+  background: rgba(21, 20, 18, 0.82);
+  color: var(--cream-soft);
+  padding: 12px 14px;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  backdrop-filter: blur(10px);
+}
+
+.intro-modal-nav,
+.intro-modal-close {
+  border: 1px solid rgba(255, 250, 244, 0.38);
+  border-radius: 999px;
+  background: rgba(255, 250, 244, 0.12);
+  color: var(--cream-soft);
+  font-family: var(--mono);
+  font-weight: 900;
+  backdrop-filter: blur(10px);
+}
+
+.intro-modal-nav {
+  width: 58px;
+  height: 58px;
+  font-size: 1.35rem;
+}
+
+.intro-modal-close {
+  position: absolute;
+  right: clamp(18px, 4vw, 54px);
+  top: clamp(18px, 4vw, 54px);
+  z-index: 2;
+  width: 48px;
+  height: 48px;
+  font-size: 1.35rem;
+}
+
+.intro-modal-nav:hover,
+.intro-modal-close:hover {
+  background: var(--cream-soft);
+  color: var(--violet-deep);
 }
 
 .proof-reel {
@@ -1134,6 +1619,7 @@ button {
 @media (max-width: 980px) {
   .login-grid,
   .dossier-hero,
+  .intro-story,
   .mode-room,
   .signal-room,
   .fierce-room {
@@ -1166,6 +1652,36 @@ button {
     left: 50%;
     bottom: 9vh;
     transform: translateX(-50%);
+  }
+
+  .intro-copy-left,
+  .intro-copy-right,
+  .intro-center-copy {
+    width: min(86vw, 680px);
+  }
+
+  .intro-copy-left {
+    top: 12vh;
+  }
+
+  .intro-copy-right {
+    top: auto;
+    right: auto;
+    bottom: 12vh;
+    left: 7vw;
+  }
+
+  .intro-front {
+    width: min(48vw, 330px);
+  }
+
+  .intro-side {
+    width: min(34vw, 240px);
+  }
+
+  .intro-photo-card,
+  .intro-card-center {
+    width: min(29vw, 250px);
   }
 
   .proof-reel {
@@ -1278,4 +1794,699 @@ button {
     grid-template-columns: repeat(6, 1fr);
     grid-auto-rows: minmax(64px, 1fr);
   }
+}
+
+
+/* === Short intro reference layout patch ===
+   Layout direction: left editorial intro, center portrait, right numbered capability list. */
+.intro-story {
+  background:
+    radial-gradient(circle at 79% 12%, rgba(181, 157, 248, 0.74), transparent 29rem),
+    radial-gradient(circle at 12% 74%, rgba(42, 20, 95, 0.9), transparent 36rem),
+    linear-gradient(135deg, #1d0b46 0%, #3b1591 42%, #8f68ff 100%);
+}
+
+.intro-story::before {
+  display: none;
+}
+
+.intro-story-bg {
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(255, 250, 244, 0.05), rgba(255, 250, 244, 0) 36%),
+    repeating-linear-gradient(90deg, rgba(255, 250, 244, 0.052) 0 1px, transparent 1px 126px),
+    repeating-linear-gradient(0deg, rgba(255, 250, 244, 0.04) 0 1px, transparent 1px 92px);
+  opacity: 0.82;
+  mask-image: none;
+}
+
+.intro-contours {
+  inset: 0;
+  height: 100%;
+  opacity: 0.72;
+  mask-image: none;
+}
+
+.intro-contours path {
+  stroke: rgba(255, 250, 244, 0.12);
+  stroke-width: 1.08;
+}
+
+.intro-copy-left {
+  left: clamp(28px, 4.4vw, 84px);
+  top: 7.2vh;
+  width: min(43vw, 760px);
+  z-index: 7;
+}
+
+.intro-section-index,
+.intro-right-heading {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 2vw, 34px);
+  color: rgba(255, 250, 244, 0.92);
+  font-family: var(--mono);
+  font-size: clamp(0.74rem, 0.9vw, 0.92rem);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.intro-section-index i,
+.intro-right-heading i {
+  display: block;
+  width: clamp(34px, 3.5vw, 62px);
+  height: 1px;
+  background: rgba(255, 250, 244, 0.64);
+}
+
+.intro-lead {
+  display: grid;
+  gap: 0;
+  overflow: visible;
+  margin: clamp(110px, 15vh, 154px) 0 0;
+  color: var(--cream-soft);
+  text-transform: uppercase;
+}
+
+.intro-word-small {
+  width: auto;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  color: rgba(181, 157, 248, 0.92);
+  font-family: var(--plain);
+  font-size: clamp(3rem, 5.7vw, 6.8rem);
+  font-weight: 900;
+  letter-spacing: -0.09em;
+  line-height: 0.68;
+}
+
+.intro-word-name {
+  color: var(--cream-soft);
+  font-family: var(--serif);
+  font-size: clamp(6.4rem, 12.7vw, 14.8rem);
+  font-weight: 900;
+  letter-spacing: -0.08em;
+  line-height: 0.74;
+  text-shadow: 0 12px 34px rgba(18, 7, 54, 0.22);
+}
+
+.intro-word-line {
+  color: var(--cream-soft);
+  font-family: var(--plain);
+  font-size: clamp(2.05rem, 3.15vw, 4rem);
+  font-weight: 900;
+  letter-spacing: -0.065em;
+  line-height: 1.03;
+}
+
+.intro-word-line strong {
+  color: var(--hero-accent-soft);
+  font: inherit;
+}
+
+.intro-word-line.muted {
+  color: rgba(181, 157, 248, 0.85);
+  font-weight: 900;
+}
+
+.intro-body-copy {
+  max-width: min(32vw, 520px);
+  margin: clamp(22px, 3vh, 34px) 0 0;
+  color: rgba(255, 250, 244, 0.86);
+  font-size: clamp(0.96rem, 1.18vw, 1.18rem);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1.7;
+}
+
+.intro-front {
+  left: 50.6%;
+  bottom: -8.5vh;
+  z-index: 9;
+  width: min(31vw, 510px);
+  aspect-ratio: 9 / 16;
+  transform: translateX(-50%);
+}
+
+.intro-front::after {
+  left: 50%;
+  bottom: 3vh;
+  width: 72%;
+  height: 34%;
+  background: rgba(18, 7, 54, 0.52);
+  filter: blur(38px);
+}
+
+.intro-front img {
+  object-fit: contain;
+  filter: drop-shadow(0 36px 62px rgba(18, 7, 54, 0.44)) saturate(0.93) contrast(1.07);
+}
+
+.intro-copy-right {
+  right: clamp(36px, 5vw, 94px);
+  top: 26vh;
+  z-index: 6;
+  width: min(30vw, 470px);
+}
+
+.intro-copy-right span:not(.intro-word):not(.intro-skill-number) {
+  display: initial;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+}
+
+.intro-right-heading {
+  justify-content: flex-start;
+  margin-bottom: clamp(34px, 5vh, 56px);
+}
+
+.intro-habit.intro-skill-list {
+  display: grid;
+  gap: clamp(24px, 4.6vh, 48px);
+  margin: 0;
+  color: var(--cream-soft);
+  font-family: var(--plain);
+  font-size: initial;
+  font-weight: initial;
+  letter-spacing: initial;
+  line-height: initial;
+  text-transform: none;
+}
+
+.intro-skill-item {
+  display: grid;
+  grid-template-columns: clamp(42px, 4vw, 64px) 1fr;
+  gap: clamp(14px, 1.7vw, 28px);
+  align-items: start;
+  padding-bottom: clamp(20px, 3vh, 34px);
+  border-bottom: 1px solid rgba(255, 250, 244, 0.12);
+}
+
+.intro-skill-number {
+  display: block;
+  color: rgba(181, 157, 248, 0.78);
+  font-family: var(--mono);
+  font-size: clamp(1.8rem, 2.8vw, 3.35rem);
+  font-weight: 800;
+  letter-spacing: -0.08em;
+  line-height: 0.9;
+}
+
+.intro-skill-item h3 {
+  margin: 0 0 12px;
+  color: var(--cream-soft);
+  font-family: var(--plain);
+  font-size: clamp(1.1rem, 1.55vw, 1.62rem);
+  font-weight: 900;
+  letter-spacing: -0.035em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.intro-skill-item p {
+  max-width: 310px;
+  margin: 0;
+  color: rgba(255, 250, 244, 0.84);
+  font-family: var(--sans);
+  font-size: clamp(0.88rem, 1.02vw, 1.02rem);
+  font-weight: 600;
+  line-height: 1.55;
+}
+
+.intro-side {
+  top: 13vh;
+  width: min(23vw, 350px);
+  height: 74vh;
+  border-radius: 36px;
+}
+
+.intro-center-copy {
+  width: min(62vw, 900px);
+}
+
+.intro-center-copy h2 {
+  font-size: clamp(2.8rem, 5.4vw, 7.1rem);
+}
+
+.intro-photo-card,
+.intro-card-center {
+  width: min(16vw, 232px);
+}
+
+.intro-card-center {
+  width: min(17.5vw, 252px);
+}
+
+@media (max-width: 980px) {
+  .intro-copy-left {
+    top: 8vh;
+    left: 6vw;
+    width: 88vw;
+  }
+
+  .intro-section-index {
+    gap: 18px;
+  }
+
+  .intro-lead {
+    margin-top: 9vh;
+  }
+
+  .intro-word-small {
+    font-size: clamp(2.3rem, 10vw, 4.8rem);
+  }
+
+  .intro-word-name {
+    font-size: clamp(5rem, 21vw, 9rem);
+  }
+
+  .intro-word-line {
+    font-size: clamp(1.55rem, 7vw, 3rem);
+  }
+
+  .intro-body-copy {
+    max-width: 82vw;
+    font-size: 0.95rem;
+  }
+
+  .intro-front {
+    left: 56%;
+    bottom: -4vh;
+    width: min(55vw, 340px);
+  }
+
+  .intro-copy-right {
+    top: auto;
+    left: 6vw;
+    right: auto;
+    bottom: 7vh;
+    width: 88vw;
+  }
+
+  .intro-right-heading {
+    margin-bottom: 18px;
+  }
+
+  .intro-habit.intro-skill-list {
+    gap: 14px;
+  }
+
+  .intro-skill-item {
+    grid-template-columns: 42px 1fr;
+    gap: 14px;
+    padding-bottom: 12px;
+  }
+
+  .intro-skill-number {
+    font-size: 1.8rem;
+  }
+
+  .intro-skill-item h3 {
+    margin-bottom: 6px;
+    font-size: 1rem;
+  }
+
+  .intro-skill-item p {
+    max-width: 72vw;
+    font-size: 0.82rem;
+    line-height: 1.42;
+  }
+
+  .intro-photo-card,
+  .intro-card-center {
+    width: min(28vw, 180px);
+  }
+}
+
+/* === One shared purple background + smaller intro portrait patch ===
+   Keep hero marquee scoped to the hero, but make the purple field itself global
+   so the hero-to-short-intro transition has no visible second container seam. */
+.dossier {
+  background: #1d0b46;
+}
+
+.cloud-layer {
+  inset: -22vh 0;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 82% 8%, rgba(181, 157, 248, 0.74), transparent 34rem),
+    radial-gradient(circle at 17% 76%, rgba(42, 20, 95, 0.9), transparent 39rem),
+    radial-gradient(circle at 58% 42%, rgba(128, 77, 250, 0.42), transparent 36rem),
+    linear-gradient(135deg, #1d0b46 0%, #3b1591 44%, #8f68ff 100%);
+  opacity: 1;
+  transform: none !important;
+}
+
+.cloud-layer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 250, 244, 0.052) 0 1px, transparent 1px 126px),
+    repeating-linear-gradient(0deg, rgba(255, 250, 244, 0.04) 0 1px, transparent 1px 92px);
+  opacity: 0.86;
+}
+
+.cloud-layer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 26% 22%, transparent 0 22%, rgba(255, 250, 244, 0.11) 22.15% 22.28%, transparent 22.45%),
+    radial-gradient(ellipse at 78% 46%, transparent 0 30%, rgba(255, 250, 244, 0.105) 30.1% 30.22%, transparent 30.36%),
+    radial-gradient(ellipse at 40% 86%, transparent 0 36%, rgba(255, 250, 244, 0.08) 36.1% 36.22%, transparent 36.36%);
+  opacity: 0.9;
+}
+
+.dossier-hero,
+.intro-story {
+  background: transparent !important;
+}
+
+.intro-story {
+  margin-top: 0;
+}
+
+.intro-story::before {
+  display: none !important;
+}
+
+.intro-story-bg {
+  background: transparent !important;
+  opacity: 1;
+}
+
+.intro-contours {
+  opacity: 0.68;
+}
+
+.hero-scroll-bg {
+  /* Keep this relative to the shrinking hero only, not the shared background. */
+  z-index: 0;
+}
+
+.intro-front {
+  width: min(24.6vw, 400px);
+  bottom: -7.2vh;
+  left: 50.4%;
+}
+
+.intro-front::after {
+  width: 62%;
+  height: 30%;
+  bottom: 4vh;
+  filter: blur(34px);
+}
+
+@media (max-width: 980px) {
+  .intro-front {
+    width: min(46vw, 300px);
+    bottom: -3vh;
+    left: 56%;
+  }
+}
+
+
+
+/* === Remove giant shared-background ellipse rings ===
+   Keep the one-piece purple background + grid, but remove the 3 huge circle/ellipse outlines. */
+.cloud-layer::after {
+  display: none !important;
+  background: none !important;
+  opacity: 0 !important;
+}
+
+
+/* === Purple character dissolve transition for short intro -> side profile stage === */
+.intro-dissolve-grid {
+  --dissolve-cols: 48;
+  position: absolute;
+  inset: -2vh 0;
+  z-index: 8;
+  display: grid;
+  grid-template-columns: repeat(var(--dissolve-cols), 1fr);
+  grid-auto-rows: minmax(15px, 1fr);
+  gap: 2px;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  opacity: 0;
+  visibility: hidden;
+  mask-image: linear-gradient(180deg, transparent 0%, black 10%, black 88%, transparent 100%);
+}
+
+.intro-dissolve-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 14px;
+  visibility: hidden;
+  overflow: hidden;
+  border: 1px solid rgba(255, 250, 244, 0.22);
+  background: linear-gradient(135deg, rgba(181, 157, 248, 0.96), rgba(128, 77, 250, 0.9));
+  color: rgba(255, 250, 244, 0.88);
+  box-shadow: 0 0 18px rgba(181, 157, 248, 0.34);
+  font-family: var(--mono);
+  font-size: clamp(0.42rem, 0.72vw, 0.76rem);
+  font-weight: 900;
+  line-height: 1;
+  text-transform: uppercase;
+  transform: translateZ(0);
+}
+
+@media (max-width: 899px) {
+  .intro-dissolve-grid {
+    --dissolve-cols: 28;
+    gap: 1px;
+  }
+
+  .intro-dissolve-cell {
+    min-height: 12px;
+    font-size: 0.42rem;
+  }
+}
+
+
+/* === Dissolve transition layering fix ===
+   The first intro layout no longer moves away. It is clipped out while the
+   purple character blocks sweep down in front. The side-profile stage animates
+   behind this top transition layer. */
+.intro-copy-left,
+.intro-copy-right,
+.intro-front,
+.intro-side,
+.intro-center-copy {
+  will-change: clip-path, transform, opacity, filter;
+}
+
+.intro-side,
+.intro-center-copy {
+  z-index: 9;
+}
+
+.intro-dissolve-grid {
+  z-index: 60 !important;
+  mix-blend-mode: normal !important;
+}
+
+.intro-dissolve-cell {
+  border-color: rgba(255, 250, 244, 0.28) !important;
+  background: linear-gradient(135deg, rgba(181, 157, 248, 0.88), rgba(128, 77, 250, 0.78)) !important;
+  color: rgba(255, 250, 244, 0.92) !important;
+  box-shadow: 0 0 20px rgba(181, 157, 248, 0.34), inset 0 1px 0 rgba(255, 250, 244, 0.18) !important;
+  backdrop-filter: blur(3px);
+}
+
+
+/* === True block-mask dissolve === */
+.intro-stage {
+  position: absolute;
+  inset: 0;
+}
+
+.intro-stage-a {
+  z-index: 8;
+}
+
+.intro-stage-b {
+  z-index: 9;
+}
+
+.intro-copy-left,
+.intro-copy-right,
+.intro-front,
+.intro-side,
+.intro-center-copy {
+  will-change: transform, opacity, filter;
+}
+
+.intro-dissolve-grid {
+  z-index: 60 !important;
+  pointer-events: none;
+}
+
+.intro-dissolve-cell {
+  border-color: rgba(255,250,244,0.24) !important;
+  background: linear-gradient(135deg, rgba(190, 173, 250, 0.9), rgba(126, 78, 251, 0.8)) !important;
+  color: rgba(255,250,244,0.95) !important;
+  box-shadow: 0 0 16px rgba(189, 172, 250, 0.26), inset 0 1px 0 rgba(255,255,255,0.14) !important;
+}
+
+
+/* === Final override: true block-mask transition === */
+.intro-stage {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.intro-stage-a { z-index: 8; }
+.intro-stage-b { z-index: 9; }
+
+.intro-dissolve-grid {
+  z-index: 60 !important;
+  pointer-events: none !important;
+  mix-blend-mode: normal !important;
+}
+
+.intro-dissolve-cell {
+  background: linear-gradient(135deg, rgba(189, 169, 249, 0.92), rgba(122, 72, 249, 0.82)) !important;
+  border: 1px solid rgba(255, 251, 245, 0.2) !important;
+  color: rgba(255, 251, 245, 0.95) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 0 14px rgba(168, 136, 248, 0.2) !important;
+}
+
+
+/* === v3 correction: real transparent SVG masks ===
+   Previous attempt used a black SVG background; in CSS alpha masks that is still opaque,
+   so the incoming stage leaked. This forces transparent-only masks. */
+.intro-stage {
+  overflow: hidden !important;
+  -webkit-mask-repeat: no-repeat !important;
+  mask-repeat: no-repeat !important;
+  -webkit-mask-size: 100% 100% !important;
+  mask-size: 100% 100% !important;
+  mask-mode: alpha;
+}
+
+.intro-stage-b .intro-side,
+.intro-stage-b .intro-center-copy {
+  opacity: 1;
+}
+
+.intro-dissolve-grid {
+  z-index: 80 !important;
+}
+
+.intro-dissolve-cell {
+  mix-blend-mode: normal !important;
+  opacity: 0;
+}
+
+
+/* Force dissolve blocks to be fully opaque */
+.intro-dissolve-cell {
+  opacity: 1 !important;
+  background: linear-gradient(135deg, rgb(181, 157, 248), rgb(128, 77, 250)) !important;
+  color: rgb(255, 250, 244) !important;
+  border-color: rgba(255, 250, 244, 0.34) !important;
+}
+
+
+/* No gap between dissolve blocks, keep the outlines */
+.intro-dissolve-grid {
+  gap: 0 !important;
+}
+
+.intro-dissolve-cell {
+  margin: 0 !important;
+}
+
+@media (max-width: 899px) {
+  .intro-dissolve-grid {
+    gap: 0 !important;
+  }
+}
+
+
+/* Zero visible seams between dissolve blocks */
+.intro-dissolve-grid {
+  gap: 0 !important;
+}
+
+.intro-dissolve-cell {
+  box-sizing: border-box !important;
+  border: 0 !important;
+  margin: -0.5px !important;
+  min-width: calc(100% + 1px) !important;
+  min-height: calc(100% + 1px) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 250, 244, 0.34),
+    inset 0 1px 0 rgba(255,255,255,0.10),
+    0 0 14px rgba(168, 136, 248, 0.18) !important;
+  background-clip: padding-box !important;
+}
+
+@media (max-width: 899px) {
+  .intro-dissolve-cell {
+    margin: -0.5px !important;
+    min-width: calc(100% + 1px) !important;
+    min-height: calc(100% + 1px) !important;
+  }
+}
+
+
+/* === Flat line mask behind zero-gap blocks ===
+   The visible purple blocks stay on top, but the actual section swap is a stable
+   clip-path line behind them. This prevents the blinking caused by dynamic masks. */
+.intro-stage {
+  position: absolute !important;
+  inset: 0 !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+  will-change: clip-path;
+}
+
+.intro-stage-a {
+  z-index: 8 !important;
+  clip-path: inset(0% 0% 0% 0%);
+}
+
+.intro-stage-b {
+  z-index: 9 !important;
+  clip-path: inset(0% 0% 100% 0%);
+}
+
+.intro-dissolve-grid {
+  z-index: 80 !important;
+  gap: 0 !important;
+  mix-blend-mode: normal !important;
+}
+
+.intro-dissolve-cell {
+  opacity: 1 !important;
+  border: 0 !important;
+  margin: -0.5px !important;
+  min-width: calc(100% + 1px) !important;
+  min-height: calc(100% + 1px) !important;
+  background: linear-gradient(135deg, rgb(181, 157, 248), rgb(128, 77, 250)) !important;
+  color: rgb(255, 250, 244) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 250, 244, 0.34),
+    inset 0 1px 0 rgba(255,255,255,0.10),
+    0 0 14px rgba(168, 136, 248, 0.18) !important;
 }

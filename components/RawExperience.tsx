@@ -91,10 +91,43 @@ const portraits = [
   { src: "/assets/fierce/fierce-right.png", label: "right placeholder" },
 ];
 
+const introPhotos = [
+  {
+    src: "/assets/fierce/fierce-left.png",
+    removedSrc: "/assets/fierce/fierce-left-removed.png",
+    number: "01",
+    label: "left profile",
+  },
+  {
+    src: "/assets/fierce/fierce-front.png",
+    removedSrc: "/assets/fierce/fierce-front-removed.png",
+    number: "02",
+    label: "front portrait",
+  },
+  {
+    src: "/assets/fierce/fierce-right.png",
+    removedSrc: "/assets/fierce/fierce-right-removed.png",
+    number: "03",
+    label: "right profile",
+  },
+];
+
+const dissolveCharacters = "RAFFA<>/{}[]01TIMINGTASTEWORKSUX";
+const dissolveCells = Array.from({ length: 720 }, (_, index) => ({
+  index,
+  char: dissolveCharacters[(index * 17 + 11) % dissolveCharacters.length],
+}));
+
 export default function RawExperience({ onReset }: RawExperienceProps) {
   const container = useRef<HTMLElement>(null);
   const [activeMode, setActiveMode] = useState(0);
   const [activeHero, setActiveHero] = useState(0);
+  const [activeIntroPhoto, setActiveIntroPhoto] = useState<number | null>(null);
+
+  const openIntroPhoto = (index: number) => setActiveIntroPhoto(index);
+  const closeIntroPhoto = () => setActiveIntroPhoto(null);
+  const showPrevIntroPhoto = () => setActiveIntroPhoto((current) => (current === null ? 0 : (current + introPhotos.length - 1) % introPhotos.length));
+  const showNextIntroPhoto = () => setActiveIntroPhoto((current) => (current === null ? 0 : (current + 1) % introPhotos.length));
 
   useGSAP(
     () => {
@@ -197,7 +230,7 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
       window.addEventListener("pointermove", movePointer);
       hero?.addEventListener("pointerleave", resetActiveTiles);
 
-      const hoverTargets = gsap.utils.toArray<HTMLElement>("a, button, .scene-card, .portrait-frame, .hero-lens-button, .hero-wordmark");
+      const hoverTargets = gsap.utils.toArray<HTMLElement>("a, button, .scene-card, .portrait-frame, .hero-lens-button, .hero-wordmark, .intro-photo-card");
       const cleanupHover = hoverTargets.map((target) => {
         const enter = () => {
           gsap.to(cursor, { scale: 1.8, duration: 0.2, ease: "power2.out" });
@@ -237,6 +270,79 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
             gsap.set(path, { strokeDasharray: length, strokeDashoffset: length });
           });
           gsap.set(".hero-scroll-frame", { "--hero-desat": 0 });
+          gsap.set(".intro-word", { yPercent: 120, rotate: 4, autoAlpha: 0 });
+          gsap.set(".intro-copy-left, .intro-copy-right, .intro-front, .intro-photo-card, .intro-card-hint", { autoAlpha: 0 });
+          gsap.set(".intro-stage-a, .intro-stage-b, .intro-side, .intro-center-copy", { autoAlpha: 1 });
+          gsap.set(".intro-copy-right", { x: 70, y: 24, rotate: 2 });
+          gsap.set(".intro-front", { yPercent: 70, scale: 0.88, rotate: -2 });
+          gsap.set(".intro-side-left", { xPercent: -120, y: 32, rotate: -5, scale: 0.92 });
+          gsap.set(".intro-side-right", { xPercent: 120, y: -32, rotate: 5, scale: 0.92 });
+          gsap.set(".intro-center-copy", { y: 42, scale: 0.94, filter: "blur(12px)" });
+          gsap.set(".intro-card-left", { x: -120, y: 120, rotate: -14, scale: 0.72 });
+          gsap.set(".intro-card-center", { y: 170, rotate: 2, scale: 0.76 });
+          gsap.set(".intro-card-right", { x: 120, y: 120, rotate: 14, scale: 0.72 });
+
+          const dissolveCellElements = gsap.utils.toArray<HTMLElement>(".intro-dissolve-cell");
+          const dissolveColumns = desktop ? 48 : 28;
+          const dissolveRows = Math.ceil(dissolveCellElements.length / dissolveColumns);
+          const dissolveChars = dissolveCharacters;
+          const hash = (row: number, col: number, seed: number) => {
+            const value = Math.sin(row * 127.1 + col * 311.7 + seed * 74.7) * 43758.5453123;
+            return value - Math.floor(value);
+          };
+          const dissolveCellData = dissolveCellElements.map((cell, index) => {
+            const row = Math.floor(index / dissolveColumns);
+            const col = index % dissolveColumns;
+            const y = dissolveRows <= 1 ? 0 : row / (dissolveRows - 1);
+            const threshold = 0.08 + hash(row, col, 1) * 0.68;
+            const scatter = (hash(row, col, 2) - 0.5) * 0.22;
+            return { cell, row, col, y, threshold, scatter };
+          });
+          const hideDissolveCells = () => {
+            dissolveCellData.forEach(({ cell }) => {
+              cell.style.visibility = "hidden";
+              cell.style.opacity = "0";
+            });
+          };
+          const renderStageClips = (progress: number) => {
+            const edge = gsap.utils.clamp(-8, 108, progress * 116 - 8);
+
+            // Stable flat reveal line. This sits BEHIND the visible character blocks.
+            // Stage A disappears from top to bottom; Stage B reveals from top to bottom.
+            gsap.set(".intro-stage-a", {
+              clipPath: `inset(${edge}% 0% 0% 0%)`,
+            });
+            gsap.set(".intro-stage-b", {
+              clipPath: `inset(0% 0% ${100 - edge}% 0%)`,
+            });
+          };
+          const renderDissolve = (progress: number) => {
+            const front = progress * (dissolveRows + 8) - 4;
+            const bandThickness = 3.15;
+
+            dissolveCellData.forEach(({ cell, row, col, threshold, scatter }) => {
+              const jitter = scatter * 7 + (threshold - 0.5) * 2.6;
+              const distance = Math.abs((row + jitter) - front);
+              const inBand = distance <= bandThickness;
+
+              if (!inBand) {
+                cell.style.visibility = "hidden";
+                cell.style.opacity = "0";
+                return;
+              }
+
+              cell.style.visibility = "visible";
+              cell.style.opacity = "1";
+
+              if (hash(row, col, Math.floor(progress * 30)) > 0.66) {
+                cell.textContent = dissolveChars[(row * 11 + col * 7 + Math.floor(progress * 83)) % dissolveChars.length];
+              }
+            });
+          };
+          const dissolveState = { value: 0 };
+          gsap.set(".intro-dissolve-grid", { "--dissolve-cols": dissolveColumns, autoAlpha: 0 });
+          hideDissolveCells();
+          renderStageClips(0);
 
           const intro = gsap.timeline({ defaults: { ease: "power4.out" } });
           intro
@@ -268,6 +374,70 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
             .to(".signature-stage", { autoAlpha: 1, duration: 0.16 }, 0.2)
             .to(signaturePaths, { strokeDashoffset: 0, duration: 0.78 }, 0.22);
 
+          const introStoryTl = gsap.timeline({
+            scrollTrigger: {
+              trigger: ".intro-story",
+              start: "top top",
+              end: desktop ? "+=5200" : "+=3600",
+              pin: true,
+              scrub: true,
+              anticipatePin: 1,
+            },
+            defaults: { ease: "none" },
+          });
+
+          introStoryTl
+            .to(".intro-contours path", { strokeDashoffset: 0, duration: 0.8, stagger: 0.04 }, 0)
+            .to(".intro-copy-left", { autoAlpha: 1, duration: 0.05 }, 0.12)
+            .to(".intro-lead .intro-word", { yPercent: 0, rotate: 0, autoAlpha: 1, duration: 0.55, stagger: 0.025, ease: "power3.out" }, 0.16)
+            .to(".intro-front", { autoAlpha: 1, yPercent: 0, scale: 1, rotate: 0, duration: 0.8, ease: "power3.out" }, 0.34)
+            .to(".intro-copy-right", { autoAlpha: 1, x: 0, y: 0, rotate: 0, duration: 0.45, ease: "power3.out" }, 0.62)
+            .to(".intro-habit .intro-word", { yPercent: 0, rotate: 0, autoAlpha: 1, duration: 0.55, stagger: 0.02, ease: "power3.out" }, 0.68)
+            .to({}, { duration: 0.35 })
+            .set(".intro-dissolve-grid", { autoAlpha: 1 })
+            .set(dissolveState, { value: 0 })
+            .to(dissolveState, {
+              value: 1,
+              duration: 1.02,
+              ease: "none",
+              onStart: () => {
+                renderStageClips(0);
+                renderDissolve(0);
+              },
+              onUpdate: () => {
+                renderStageClips(dissolveState.value);
+                renderDissolve(dissolveState.value);
+              },
+              onComplete: hideDissolveCells,
+              onReverseComplete: hideDissolveCells,
+            })
+            .to(".intro-side", {
+              xPercent: 0,
+              y: 0,
+              rotate: 0,
+              scale: 1,
+              duration: 0.82,
+              stagger: 0.05,
+              ease: "power3.out",
+            }, "<+0.14")
+            .to(".intro-center-copy", {
+              y: 0,
+              scale: 1,
+              filter: "blur(0px)",
+              duration: 0.72,
+              ease: "power3.out",
+            }, "<+0.16")
+            .to(".intro-dissolve-grid", { autoAlpha: 0, duration: 0.22, ease: "power2.out" }, ">-0.06")
+            .set(".intro-stage-a", { autoAlpha: 0 })
+            .to({}, { duration: 0.4 })
+            .to(".intro-side-left", { x: "-18vw", y: "8vh", rotate: -7, scale: 0.82, autoAlpha: 0.18, duration: 0.7, ease: "power2.inOut" })
+            .to(".intro-side-right", { x: "18vw", y: "8vh", rotate: 7, scale: 0.82, autoAlpha: 0.18, duration: 0.7, ease: "power2.inOut" }, "<")
+            .to(".intro-center-copy", { y: -70, autoAlpha: 0, filter: "blur(8px)", duration: 0.5, ease: "power2.inOut" }, "<+0.05")
+            .to(".intro-photo-cards", { autoAlpha: 1, duration: 0.05 }, "<+0.16")
+            .to(".intro-photo-card", { autoAlpha: 1, x: 0, y: 0, rotate: (index) => [-7, 1.5, 7][index], scale: (index) => (index === 1 ? 1.06 : 1), duration: 0.72, stagger: 0.08, ease: "power3.out" }, "<")
+            .to(".intro-card-hint", { autoAlpha: 1, y: 0, duration: 0.35, ease: "power2.out" }, ">-0.2")
+            .to({}, { duration: 0.45 });
+
           ScrollTrigger.create({
             start: 0,
             end: "max",
@@ -276,16 +446,10 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
             },
           });
 
-          gsap.to(".cloud-layer", {
-            yPercent: desktop ? 18 : 8,
-            ease: "none",
-            scrollTrigger: {
-              trigger: ".dossier-hero",
-              start: "top top",
-              end: "bottom top",
-              scrub: true,
-            },
-          });
+          // Keep the purple field as one fixed shared background across hero + short intro.
+          // The marquee remains scoped inside .dossier-hero, but the base background should not parallax,
+          // otherwise the transition reads as two stacked sections.
+          gsap.set(".cloud-layer", { yPercent: 0, clearProps: "transform" });
 
           if (desktop) {
             const rail = root.querySelector<HTMLElement>(".scene-rail");
@@ -474,6 +638,117 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
         <svg className="signature-stage" viewBox="0 0 576 263" aria-hidden="true">
           <path className="signature-path" d="M11.9889 182.474C11.2318 183.245 10.4747 184.016 12.3559 184.413C14.2371 184.81 18.7796 184.81 48.7527 168.624C78.7259 152.439 133.992 120.068 168.141 99.1527C202.289 78.2377 213.645 69.7595 225.173 57.2992C250.041 30.4211 259.758 9.66525 258.244 6.93263C255.947 2.78818 236.197 28.9104 210.995 64.2709C199.747 80.0536 193.365 92.6948 178.877 115.618C164.39 138.542 142.435 171.684 126.203 194.537C101.189 229.757 86.3998 247.76 56.1788 254.13C40.821 257.367 25.4056 257.213 16.4354 254.13C7.46526 251.047 4.24238 240.151 8.02774 231.965C17.0504 212.453 44.7265 198.146 99.075 167.55C138.266 145.487 204.147 116.144 239.202 99.8767C274.257 83.6095 277.285 82.8387 279.602 83.9832C281.919 85.1276 284.542 88.8793 279.671 95.9646C257.191 128.662 235.325 138.846 228.454 144.673C225.306 147.343 223.097 149.73 231.769 150.921C259.894 154.784 305.388 142.092 341.349 126.526C352.627 121.644 348.541 120.208 345.456 120.196C325.699 120.121 307.178 147.417 307.166 151.691C307.12 169.072 363.591 142.863 383.596 126.864C386.884 124.235 385.936 120.255 384.422 123.676C382.908 127.098 379.88 137.117 380.212 138.425C382.096 145.832 391.259 115.607 397.74 90.8147C408.066 51.3131 408.878 19.0543 408.878 11.6271C408.878 5.95169 407.364 34.4457 405.069 73.1461C403.417 101.017 404.289 145.759 402.775 174.568C399.868 229.877 390.525 236.94 390.525 239.684C390.525 240.023 390.525 235.492 392.417 231.965C396.553 224.259 410.323 216.784 423.319 207.068C430.633 201.6 384.101 196.488 320.197 194.175C301.59 193.502 311.56 187.239 324.958 182.544C338.355 177.85 355.011 173.225 395.767 166.604C436.522 159.983 500.873 151.505 569.469 138.098M365.289 91.387L473.114 70.3669" />
         </svg>
+      </section>
+
+      <section className="intro-story" aria-label="Raffa short intro portrait story">
+        <div className="intro-story-bg" aria-hidden="true" />
+        <svg className="intro-contours" viewBox="0 0 1440 900" preserveAspectRatio="none" aria-hidden="true">
+          <path pathLength="1" d="M-120 160 C110 -20 250 330 486 150 C620 48 760 182 650 340 C540 498 270 336 194 560 C108 812 396 872 560 692 C722 514 668 388 896 310 C1070 250 1068 82 1260 42 C1430 8 1570 122 1480 340" />
+          <path pathLength="1" d="M120 930 C166 668 300 638 350 480 C404 306 206 330 236 170 C270 -8 452 8 564 104 C720 238 620 394 820 438 C1010 482 956 648 1130 668 C1294 686 1270 526 1540 532" />
+          <path pathLength="1" d="M-150 690 C140 500 280 735 460 602 C620 484 492 270 720 205 C940 140 1008 428 1260 334 C1410 278 1460 376 1550 470" />
+        </svg>
+
+        <div className="intro-dissolve-grid" aria-hidden="true">
+          {dissolveCells.map((cell) => (
+            <span className="intro-dissolve-cell" key={cell.index}>{cell.char}</span>
+          ))}
+        </div>
+
+        <div className="intro-stage intro-stage-a">
+          <section className="intro-copy-left">
+          <div className="intro-section-index" aria-hidden="true">
+            <span>01</span>
+            <i />
+            <span>intro</span>
+          </div>
+          <h2 className="intro-lead">
+            <span className="intro-word intro-word-small">I&apos;m</span>
+            <span className="intro-word intro-word-name">Raffa.</span>
+            <span className="intro-word intro-word-line">I build <strong>frontend,</strong></span>
+            <span className="intro-word intro-word-line muted">design screens,</span>
+            <span className="intro-word intro-word-line">and cut <strong>videos.</strong></span>
+          </h2>
+          <p className="intro-body-copy">
+            Different tools, same habit: I care about timing, taste, and whether the thing actually works when someone touches it.
+          </p>
+        </section>
+
+        <section className="intro-copy-right" aria-label="What Raffa does">
+          <div className="intro-right-heading">
+            <span>what i do</span>
+            <i />
+          </div>
+          <div className="intro-habit intro-skill-list">
+            <article className="intro-word intro-skill-item">
+              <span className="intro-skill-number">01</span>
+              <div>
+                <h3>Build frontend</h3>
+                <p>Responsive interfaces, real flows, and code that stays maintainable.</p>
+              </div>
+            </article>
+            <article className="intro-word intro-skill-item">
+              <span className="intro-skill-number">02</span>
+              <div>
+                <h3>Design screens</h3>
+                <p>Clean layouts with taste, hierarchy, and clear visual focus.</p>
+              </div>
+            </article>
+            <article className="intro-word intro-skill-item">
+              <span className="intro-skill-number">03</span>
+              <div>
+                <h3>Cut videos</h3>
+                <p>Timing, pacing, and motion that make the moment land right.</p>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <figure className="intro-front" aria-label="Front fierce portrait placeholder">
+          <Image src="/assets/fierce/fierce-front-removed.png" alt="front fierce placeholder" width={941} height={1672} />
+        </figure>
+        </div>
+
+        <div className="intro-stage intro-stage-b">
+        <figure className="intro-side intro-side-left" aria-label="Left side fierce portrait placeholder facing inward">
+          <Image src="/assets/fierce/fierce-right-removed.png" alt="left inward fierce placeholder" width={941} height={1672} />
+        </figure>
+        <figure className="intro-side intro-side-right" aria-label="Right side fierce portrait placeholder facing inward">
+          <Image src="/assets/fierce/fierce-left-removed.png" alt="right inward fierce placeholder" width={941} height={1672} />
+        </figure>
+
+        <section className="intro-center-copy">
+          <p className="mono-kicker">same instinct</p>
+          <h2>Code, design, and editing are different tools. The instinct is the same: build the moment right.</h2>
+        </section>
+        </div>
+
+        <div className="intro-photo-cards" aria-label="Fierce photo card set">
+          {introPhotos.map((photo, index) => (
+            <button
+              className={`intro-photo-card ${index === 0 ? "intro-card-left" : index === 1 ? "intro-card-center" : "intro-card-right"}`}
+              key={photo.label}
+              onClick={() => openIntroPhoto(index)}
+              type="button"
+            >
+              <span className="intro-card-tape" aria-hidden="true" />
+              <Image src={photo.src} alt={`${photo.label} placeholder`} width={941} height={1672} />
+              <span className="intro-card-caption"><span>{photo.number}</span> {photo.label}</span>
+            </button>
+          ))}
+          <p className="intro-card-hint">hover / click to inspect</p>
+        </div>
+
+        {activeIntroPhoto !== null && (
+          <div className="intro-photo-modal" role="dialog" aria-modal="true" aria-label={`${introPhotos[activeIntroPhoto].label} preview`} onClick={closeIntroPhoto}>
+            <button className="intro-modal-close" onClick={closeIntroPhoto} type="button" aria-label="Close photo preview">×</button>
+            <button className="intro-modal-nav intro-modal-prev" onClick={(event) => { event.stopPropagation(); showPrevIntroPhoto(); }} type="button" aria-label="Previous photo">←</button>
+            <figure className="intro-modal-card" onClick={(event) => event.stopPropagation()}>
+              <Image src={introPhotos[activeIntroPhoto].src} alt={`${introPhotos[activeIntroPhoto].label} preview`} width={941} height={1672} />
+              <figcaption><span>{introPhotos[activeIntroPhoto].number}</span>{introPhotos[activeIntroPhoto].label}</figcaption>
+            </figure>
+            <button className="intro-modal-nav intro-modal-next" onClick={(event) => { event.stopPropagation(); showNextIntroPhoto(); }} type="button" aria-label="Next photo">→</button>
+          </div>
+        )}
       </section>
 
       <section className="proof-reel" id="proof" aria-label="Pinned proof reel">
