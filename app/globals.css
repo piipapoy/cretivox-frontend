@@ -631,7 +631,7 @@ button {
   left: 50%;
   top: 50%;
   z-index: 5;
-  width: min(72vw, 760px);
+  width: min(74vw, 820px);
   height: auto;
   opacity: 0;
   overflow: visible;
@@ -645,8 +645,7 @@ button {
   stroke: var(--hero-accent-soft);
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-width: 7.5;
-  vector-effect: non-scaling-stroke;
+  stroke-width: 13;
 }
 
 .proof-reel {
