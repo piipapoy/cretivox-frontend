@@ -598,9 +598,11 @@ button {
 .hero-lens-row {
   position: absolute;
   left: 50%;
-  bottom: 7vh;
+  bottom: 4.5vh;
+  z-index: 9;
   display: flex;
   gap: 8px;
+  padding-block: 8px;
   transform: translateX(-50%);
 }
 
@@ -614,6 +616,7 @@ button {
   font-size: 0.68rem;
   font-weight: 800;
   letter-spacing: 0.08em;
+  line-height: 1;
   text-transform: uppercase;
   backdrop-filter: blur(10px);
   transition: background 220ms var(--ease-out), color 220ms var(--ease-out), transform 220ms var(--ease-out);
@@ -624,6 +627,16 @@ button {
   background: var(--hero-accent);
   color: var(--cream-soft);
   transform: translateY(-4px);
+}
+
+@media (max-width: 1500px) {
+  .hero-wordmark {
+    font-size: clamp(5.4rem, 13.5vw, 12rem);
+  }
+
+  .hero-line-accent {
+    font-size: 0.27em;
+  }
 }
 
 .signature-stage {
