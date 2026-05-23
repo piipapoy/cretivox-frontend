@@ -217,11 +217,15 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
           if (reduce) {
             gsap.set(".hero-line, .hero-type-stage, .hero-lens-button, .scene-card, .portrait-frame", { autoAlpha: 1, clearProps: "transform" });
             gsap.set(".signature-stage", { autoAlpha: 0 });
-            gsap.set(".signature-path", { strokeDasharray: 1500, strokeDashoffset: 0 });
+            gsap.set(".signature-path", { strokeDashoffset: 0 });
             return;
           }
 
-          gsap.set(".signature-path", { strokeDasharray: 1500, strokeDashoffset: 1500 });
+          const signaturePaths = gsap.utils.toArray<SVGPathElement>(".signature-path");
+          signaturePaths.forEach((path) => {
+            const length = path.getTotalLength();
+            gsap.set(path, { strokeDasharray: length, strokeDashoffset: length });
+          });
           gsap.set(".hero-scroll-frame", { "--hero-desat": 0 });
 
           const intro = gsap.timeline({ defaults: { ease: "power4.out" } });
@@ -251,7 +255,7 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
             .to(".hero-wordmark", { scale: 0.96, duration: 0.72 }, 0.12)
             .to(".hero-scroll-frame", { "--hero-desat": 1, duration: 0.58 }, 0.34)
             .to(".signature-stage", { autoAlpha: 1, duration: 0.16 }, 0.2)
-            .to(".signature-path", { strokeDashoffset: 0, duration: 0.78 }, 0.22);
+            .to(signaturePaths, { strokeDashoffset: 0, duration: 0.78 }, 0.22);
 
           ScrollTrigger.create({
             start: 0,
