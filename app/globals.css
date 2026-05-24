@@ -2858,6 +2858,24 @@ button {
   }
 }
 
+@media (min-width: 1600px) and (min-height: 900px) {
+  .intro-stage-b .intro-center-copy {
+    top: 47%;
+    width: min(46vw, 820px);
+  }
+
+  .intro-stage-b .intro-center-copy h2 {
+    max-width: 820px;
+    font-size: clamp(4.2rem, 4.3vw, 5.45rem);
+    line-height: 0.9;
+  }
+
+  .intro-center-body {
+    margin-top: clamp(18px, 2.2vh, 28px);
+    font-size: clamp(1rem, 1.08vw, 1.18rem);
+  }
+}
+
 
 /* === Photo-card finale polish === */
 .intro-photo-cards {
