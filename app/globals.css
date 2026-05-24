@@ -327,6 +327,10 @@ button {
   mix-blend-mode: multiply;
 }
 
+.is-intro-modal-open .dossier-cursor {
+  z-index: 1300;
+}
+
 .progress-line {
   position: fixed;
   top: 0;
@@ -500,6 +504,11 @@ button {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   backdrop-filter: blur(10px);
+}
+
+.is-intro-modal-open .hero-lock {
+  z-index: 900;
+  pointer-events: none;
 }
 
 .hero-type-stage {
@@ -1069,56 +1078,90 @@ button {
   inset: 0;
   z-index: 1200;
   display: grid;
-  grid-template-columns: 72px minmax(240px, 520px) 72px;
+  grid-template-columns: clamp(46px, 6vw, 72px) auto clamp(46px, 6vw, 72px);
   align-items: center;
   justify-content: center;
-  gap: clamp(12px, 2vw, 26px);
-  padding: clamp(18px, 4vw, 56px);
-  background: rgba(18, 7, 54, 0.74);
+  gap: clamp(10px, 2vw, 26px);
+  padding: clamp(18px, 4vw, 56px) clamp(16px, 4vw, 56px);
+  background: transparent;
   backdrop-filter: blur(18px);
+  animation: intro-modal-fade 260ms var(--ease-out) both;
+}
+
+.intro-photo-modal::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 50%, rgba(18, 7, 54, 0.86), rgba(18, 7, 54, 0.74) 56%, rgba(18, 7, 54, 0.78));
+  animation: intro-modal-orb 360ms var(--ease-out) both;
+}
+
+.intro-modal-stage {
+  position: relative;
+  z-index: 1;
+  width: min(44vw, 520px);
+  aspect-ratio: 9 / 16;
+  overflow: hidden;
+  border-radius: 26px;
+  filter: drop-shadow(0 42px 120px rgba(0, 0, 0, 0.45));
 }
 
 .intro-modal-card {
-  position: relative;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
   overflow: hidden;
   margin: 0;
-  width: min(78vw, 520px);
-  max-height: 84vh;
-  aspect-ratio: 9 / 16;
+  width: 100%;
+  height: 100%;
   border: 2px solid rgba(255, 250, 244, 0.72);
   border-radius: 26px;
-  background: var(--ink);
-  box-shadow: 0 42px 120px rgba(0, 0, 0, 0.45);
+  background: transparent;
+  box-shadow: none;
+  will-change: transform, opacity;
+}
+
+.intro-modal-card-in-initial {
+  animation: intro-modal-card-in 360ms var(--ease-out) both;
+}
+
+.intro-modal-card-in-prev,
+.intro-modal-card-in-next {
+  z-index: 1;
+}
+
+.intro-modal-card-in-prev {
+  animation: intro-modal-slide-in-prev 340ms cubic-bezier(0.18, 0.82, 0.2, 1) both;
+}
+
+.intro-modal-card-in-next {
+  animation: intro-modal-slide-in-next 340ms cubic-bezier(0.18, 0.82, 0.2, 1) both;
+}
+
+.intro-modal-card-out-prev {
+  z-index: 1;
+  animation: intro-modal-slide-out-prev 340ms cubic-bezier(0.18, 0.82, 0.2, 1) both;
+}
+
+.intro-modal-card-out-next {
+  z-index: 1;
+  animation: intro-modal-slide-out-next 340ms cubic-bezier(0.18, 0.82, 0.2, 1) both;
 }
 
 .intro-modal-card img {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-}
-
-.intro-modal-card figcaption {
-  position: absolute;
-  left: 18px;
-  right: 18px;
-  bottom: 18px;
-  display: flex;
-  justify-content: space-between;
-  border-radius: 12px;
-  background: rgba(21, 20, 18, 0.82);
-  color: var(--cream-soft);
-  padding: 12px 14px;
-  font-family: var(--mono);
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  backdrop-filter: blur(10px);
+  object-fit: contain;
+  object-position: center center;
 }
 
 .intro-modal-nav,
 .intro-modal-close {
+  position: relative;
+  z-index: 2;
   border: 1px solid rgba(255, 250, 244, 0.38);
   border-radius: 999px;
   background: rgba(255, 250, 244, 0.12);
@@ -1126,28 +1169,173 @@ button {
   font-family: var(--mono);
   font-weight: 900;
   backdrop-filter: blur(10px);
+  animation: intro-modal-control-in 300ms var(--ease-out) 120ms both;
 }
 
 .intro-modal-nav {
   width: 58px;
   height: 58px;
   font-size: 1.35rem;
+  transition: background-color 180ms var(--ease-out), color 180ms var(--ease-out), transform 180ms var(--ease-out), box-shadow 180ms var(--ease-out);
+}
+
+.intro-modal-nav:hover {
+  transform: translateY(-4px) scale(1.06);
+  box-shadow: 0 18px 42px rgba(18, 7, 54, 0.34), 0 0 0 7px rgba(255, 250, 244, 0.08);
+}
+
+.intro-modal-prev:hover {
+  transform: translateX(-4px) scale(1.06);
+}
+
+.intro-modal-next:hover {
+  transform: translateX(4px) scale(1.06);
+}
+
+.intro-modal-nav:active {
+  transform: scale(0.94);
 }
 
 .intro-modal-close {
   position: absolute;
-  right: clamp(18px, 4vw, 54px);
-  top: clamp(18px, 4vw, 54px);
+  right: clamp(18px, 3vw, 40px);
+  top: clamp(18px, 3vw, 40px);
   z-index: 2;
   width: 48px;
   height: 48px;
   font-size: 1.35rem;
 }
 
+@keyframes intro-modal-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes intro-modal-orb {
+  from {
+    clip-path: circle(0% at 50% 50%);
+  }
+  to {
+    clip-path: circle(145% at 50% 50%);
+  }
+}
+
+@keyframes intro-modal-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.86) rotate(-1.5deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotate(0deg);
+  }
+}
+
+@keyframes intro-modal-slide-in-prev {
+  from {
+    opacity: 1;
+    transform: translateX(-108%) scale(0.985);
+  }
+  18% {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes intro-modal-slide-in-next {
+  from {
+    opacity: 1;
+    transform: translateX(108%) scale(0.985);
+  }
+  18% {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes intro-modal-slide-out-prev {
+  from {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(108%) scale(0.985);
+  }
+}
+
+@keyframes intro-modal-slide-out-next {
+  from {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-108%) scale(0.985);
+  }
+}
+
+@keyframes intro-modal-control-in {
+  from {
+    opacity: 0;
+    transform: scale(0.86);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 .intro-modal-nav:hover,
 .intro-modal-close:hover {
   background: var(--cream-soft);
   color: var(--violet-deep);
+}
+
+@media (max-height: 820px) {
+  .intro-photo-modal {
+    padding-block: 18px;
+  }
+
+  .intro-modal-stage {
+    width: min(40vw, 360px);
+  }
+}
+
+@media (max-width: 899px) {
+  .intro-photo-modal {
+    grid-template-columns: 48px minmax(0, 1fr) 48px;
+    padding-inline: 14px;
+  }
+
+  .intro-modal-stage {
+    width: min(68vw, 360px);
+  }
+
+  .intro-modal-nav {
+    width: 46px;
+    height: 46px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro-photo-modal,
+  .intro-photo-modal::before,
+  .intro-modal-card,
+  .intro-modal-nav,
+  .intro-modal-close {
+    animation: none !important;
+  }
 }
 
 .proof-reel {
@@ -2489,4 +2677,854 @@ button {
     inset 0 0 0 1px rgba(255, 250, 244, 0.34),
     inset 0 1px 0 rgba(255,255,255,0.10),
     0 0 14px rgba(168, 136, 248, 0.18) !important;
+}
+
+
+/* === Side profile stage copy/layout polish ===
+   Keep the same unified purple background; this only improves the side-profile frame,
+   middle copy, and subtle UI embellishments. */
+.intro-stage-b::before,
+.intro-stage-b::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  z-index: 1;
+  width: min(64vw, 940px);
+  height: 1px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(255, 250, 244, 0.18), rgba(181, 157, 248, 0.55), rgba(255, 250, 244, 0.18), transparent);
+}
+
+.intro-stage-b::before {
+  top: 28vh;
+}
+
+.intro-stage-b::after {
+  bottom: 18vh;
+}
+
+.intro-stage-b .intro-side {
+  z-index: 4;
+  width: min(21.5vw, 330px);
+  top: 17vh;
+  filter: drop-shadow(0 34px 58px rgba(15, 5, 45, 0.36));
+}
+
+.intro-stage-b .intro-side-left {
+  left: clamp(28px, 3.8vw, 72px);
+}
+
+.intro-stage-b .intro-side-right {
+  right: clamp(28px, 3.8vw, 72px);
+}
+
+.intro-stage-b .intro-side::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border: 1px solid rgba(255, 250, 244, 0.22);
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(181, 157, 248, 0.22), transparent 34%),
+    linear-gradient(180deg, rgba(255, 250, 244, 0.08), rgba(255, 250, 244, 0.02));
+  box-shadow:
+    inset 0 0 0 1px rgba(181, 157, 248, 0.16),
+    0 24px 70px rgba(18, 7, 54, 0.28);
+  backdrop-filter: blur(7px);
+}
+
+.intro-stage-b .intro-side::after {
+  content: "•••";
+  position: absolute;
+  top: 24px;
+  right: 22px;
+  z-index: 6;
+  color: rgba(181, 157, 248, 0.9);
+  font-family: var(--mono);
+  font-size: 1.2rem;
+  letter-spacing: 0.12em;
+  writing-mode: vertical-rl;
+}
+
+.intro-stage-b .intro-side img {
+  border-radius: 28px;
+  padding: 0;
+  object-fit: contain;
+  filter: drop-shadow(0 26px 44px rgba(18, 7, 54, 0.34)) saturate(0.92) contrast(1.04);
+  opacity: 0.96;
+}
+
+.intro-stage-b .intro-center-copy {
+  z-index: 5;
+  width: min(52vw, 860px);
+  top: 50%;
+  color: var(--cream-soft);
+}
+
+.intro-stage-b .intro-center-copy::before,
+.intro-stage-b .intro-center-copy::after {
+  content: "";
+  position: absolute;
+  top: 0.48rem;
+  width: clamp(64px, 10vw, 180px);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(181, 157, 248, 0.78));
+}
+
+.intro-stage-b .intro-center-copy::before {
+  right: calc(50% + 78px);
+}
+
+.intro-stage-b .intro-center-copy::after {
+  left: calc(50% + 78px);
+  transform: scaleX(-1);
+}
+
+.intro-stage-b .intro-center-copy .mono-kicker {
+  color: rgba(255, 250, 244, 0.72);
+  letter-spacing: 0.34em;
+}
+
+.intro-stage-b .intro-center-copy h2 {
+  max-width: 920px;
+  margin-inline: auto;
+  font-size: clamp(3rem, 5.5vw, 6.65rem);
+  line-height: 0.92;
+  letter-spacing: -0.075em;
+  text-wrap: balance;
+  text-shadow: 0 16px 48px rgba(18, 7, 54, 0.42);
+}
+
+.intro-stage-b .intro-center-copy h2::first-line {
+  color: rgba(255, 250, 244, 0.95);
+}
+
+.intro-center-body {
+  max-width: 650px;
+  margin: clamp(22px, 3vh, 34px) auto 0;
+  color: rgba(255, 250, 244, 0.62);
+  font-family: var(--sans);
+  font-size: clamp(1rem, 1.45vw, 1.35rem);
+  font-weight: 500;
+  line-height: 1.55;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.intro-stage-b .intro-center-copy .mono-kicker::before,
+.intro-stage-b .intro-center-copy .mono-kicker::after {
+  content: "";
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  margin: 0 18px 2px;
+  border-radius: 999px;
+  background: var(--hero-accent-soft);
+  box-shadow: 0 0 18px rgba(181, 157, 248, 0.8);
+}
+
+@media (max-width: 899px) {
+  .intro-stage-b .intro-side {
+    width: 40vw;
+    top: 26vh;
+  }
+
+  .intro-stage-b .intro-side-left {
+    left: -10vw;
+  }
+
+  .intro-stage-b .intro-side-right {
+    right: -10vw;
+  }
+
+  .intro-stage-b .intro-center-copy {
+    width: min(84vw, 620px);
+    top: 48%;
+  }
+
+  .intro-stage-b .intro-center-copy h2 {
+    font-size: clamp(2.2rem, 10vw, 4.6rem);
+  }
+
+  .intro-center-body {
+    font-size: 0.95rem;
+  }
+
+  .intro-stage-b::before,
+  .intro-stage-b::after {
+    width: 82vw;
+  }
+}
+
+
+/* === Photo-card finale polish === */
+.intro-photo-cards {
+  isolation: isolate;
+}
+
+.intro-photo-cards::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: -1;
+  width: min(64vw, 880px);
+  height: min(38vh, 380px);
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(181, 157, 248, 0.28), transparent 58%),
+    linear-gradient(90deg, transparent, rgba(255, 250, 244, 0.08), transparent);
+  filter: blur(18px);
+  opacity: 0.9;
+}
+
+.intro-photo-card {
+  will-change: transform, filter;
+  transform-origin: center center;
+  transition: box-shadow 220ms var(--ease-out), border-color 220ms var(--ease-out);
+}
+
+.intro-photo-card:hover,
+.intro-photo-card:focus-visible {
+  border-color: rgba(255, 250, 244, 0.92);
+  box-shadow:
+    0 34px 80px rgba(18, 7, 54, 0.5),
+    0 0 0 1px rgba(181, 157, 248, 0.5),
+    0 0 38px rgba(181, 157, 248, 0.42);
+  outline: none;
+}
+
+.intro-photo-card::after {
+  content: "OPEN";
+  position: absolute;
+  right: 18px;
+  top: 18px;
+  z-index: 6;
+  border: 1px solid rgba(255, 250, 244, 0.45);
+  border-radius: 999px;
+  background: rgba(18, 7, 54, 0.46);
+  color: rgba(255, 250, 244, 0.86);
+  padding: 7px 9px;
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: opacity 220ms var(--ease-out), transform 220ms var(--ease-out);
+  backdrop-filter: blur(10px);
+}
+
+.intro-photo-card:hover::after,
+.intro-photo-card:focus-visible::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.intro-photo-card img {
+  transition: transform 320ms var(--ease-out), filter 320ms var(--ease-out);
+}
+
+.intro-photo-card:hover img,
+.intro-photo-card:focus-visible img {
+  transform: scale(1.035);
+  filter: saturate(0.96) contrast(1.08);
+}
+
+.intro-card-hint {
+  margin-top: clamp(26px, 4vh, 42px);
+  background: rgba(18, 7, 54, 0.34);
+  border: 1px solid rgba(255, 250, 244, 0.16);
+  box-shadow: 0 18px 46px rgba(18, 7, 54, 0.25);
+  backdrop-filter: blur(12px);
+}
+
+/* Make sure the previous full side-profile stage is fully gone during the card finale. */
+.intro-photo-cards ~ .intro-side,
+.intro-photo-cards ~ .intro-center-copy {
+  pointer-events: none;
+}
+
+@media (max-width: 899px) {
+  .intro-photo-card:hover,
+  .intro-photo-card:focus-visible {
+    box-shadow:
+      0 24px 60px rgba(18, 7, 54, 0.42),
+      0 0 0 1px rgba(181, 157, 248, 0.42);
+  }
+}
+
+
+/* === White card finale inspired by social-card fan layout === */
+.intro-card-bg-wipe {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 14;
+  width: 165vmax;
+  height: 165vmax;
+  border-radius: 9999px;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 38%, rgba(255, 250, 244, 1), rgba(244, 239, 235, 1) 62%, rgba(244, 239, 235, 1) 100%);
+  box-shadow: 0 0 0 1px rgba(21, 20, 18, 0.04);
+  transform-origin: center center;
+}
+
+.intro-photo-cards {
+  z-index: 22 !important;
+  inset: 0;
+  display: grid !important;
+  place-items: center;
+  pointer-events: none;
+  color: var(--ink);
+}
+
+.intro-card-copy {
+  position: absolute;
+  top: clamp(44px, 7vh, 78px);
+  left: 50%;
+  z-index: 24;
+  width: min(760px, 88vw);
+  text-align: center;
+  transform: translate(-50%, -10px);
+  pointer-events: none;
+}
+
+.intro-card-copy p {
+  margin: 0 0 10px;
+  color: rgba(21, 20, 18, 0.58);
+  font-family: var(--mono);
+  font-size: clamp(0.62rem, 0.75vw, 0.78rem);
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.intro-card-copy h2 {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--plain);
+  font-size: clamp(2.7rem, 5.5vw, 6.8rem);
+  font-weight: 900;
+  line-height: 0.84;
+  letter-spacing: -0.085em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.intro-photo-card {
+  position: absolute !important;
+  top: 50%;
+  left: 50%;
+  width: clamp(190px, 17vw, 275px) !important;
+  height: clamp(285px, 26vw, 410px) !important;
+  padding: 0 !important;
+  border: 1px solid rgba(21, 20, 18, 0.18) !important;
+  border-radius: clamp(24px, 2vw, 36px) !important;
+  overflow: hidden;
+  background: rgba(21, 20, 18, 0.08) !important;
+  box-shadow:
+    0 28px 70px rgba(21, 20, 18, 0.18),
+    0 0 0 8px rgba(255, 250, 244, 0.78);
+  transform-origin: center center;
+  translate: -50% -44%;
+}
+
+.intro-card-center {
+  height: clamp(330px, 31vw, 490px) !important;
+  width: clamp(205px, 18.4vw, 300px) !important;
+  border-radius: clamp(28px, 2.2vw, 42px) !important;
+}
+
+.intro-photo-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover !important;
+  filter: saturate(0.88) contrast(1.05);
+}
+
+.intro-card-tape {
+  display: none !important;
+}
+
+.intro-card-caption {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 13px;
+  z-index: 5;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  border-radius: 999px;
+  background: rgba(21, 20, 18, 0.74);
+  color: var(--cream-soft);
+  padding: 9px 12px;
+  font-family: var(--mono);
+  font-size: clamp(0.52rem, 0.62vw, 0.68rem);
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  backdrop-filter: blur(8px);
+}
+
+.intro-card-caption span {
+  opacity: 0.75;
+}
+
+.intro-card-hint {
+  position: absolute !important;
+  left: 50%;
+  bottom: clamp(44px, 7vh, 74px) !important;
+  z-index: 24;
+  transform: translateX(-50%);
+  margin: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: rgba(21, 20, 18, 0.78) !important;
+  box-shadow: none !important;
+  font-family: var(--plain);
+  font-size: clamp(1rem, 1.35vw, 1.35rem) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.035em !important;
+  text-transform: none !important;
+  backdrop-filter: none !important;
+}
+
+.intro-photo-card:hover,
+.intro-photo-card:focus-visible {
+  border-color: rgba(21, 20, 18, 0.34) !important;
+  box-shadow:
+    0 38px 90px rgba(21, 20, 18, 0.25),
+    0 0 0 9px rgba(255, 250, 244, 0.92) !important;
+}
+
+.intro-photo-card::after {
+  background: rgba(255, 250, 244, 0.86) !important;
+  color: var(--ink) !important;
+  border-color: rgba(21, 20, 18, 0.16) !important;
+}
+
+.intro-photo-cards::before {
+  display: none !important;
+}
+
+@media (max-width: 899px) {
+  .intro-card-copy {
+    top: 8vh;
+  }
+
+  .intro-card-copy h2 {
+    font-size: clamp(2.1rem, 12vw, 4.2rem);
+  }
+
+  .intro-photo-card {
+    width: 35vw !important;
+    height: 52vw !important;
+    translate: -50% -38%;
+  }
+
+  .intro-card-center {
+    width: 39vw !important;
+    height: 60vw !important;
+  }
+
+  .intro-card-hint {
+    bottom: 7vh !important;
+  }
+}
+
+
+/* === Card finale: float in the middle, smaller rectangular cards === */
+.intro-card-copy {
+  top: clamp(34px, 5.6vh, 58px) !important;
+}
+
+.intro-card-copy h2 {
+  font-size: clamp(2.35rem, 4.75vw, 5.8rem) !important;
+}
+
+.intro-photo-cards {
+  place-items: center !important;
+}
+
+.intro-photo-card {
+  top: 54% !important;
+  left: 50% !important;
+  width: clamp(155px, 13.2vw, 215px) !important;
+  height: clamp(230px, 19.5vw, 320px) !important;
+  border-radius: clamp(18px, 1.5vw, 28px) !important;
+  translate: -50% -50% !important;
+}
+
+.intro-card-center {
+  width: clamp(170px, 14.6vw, 235px) !important;
+  height: clamp(255px, 22vw, 355px) !important;
+  border-radius: clamp(20px, 1.65vw, 30px) !important;
+}
+
+.intro-card-caption {
+  bottom: 10px !important;
+  left: 10px !important;
+  right: 10px !important;
+  padding: 7px 10px !important;
+  font-size: clamp(0.46rem, 0.52vw, 0.58rem) !important;
+}
+
+.intro-card-hint {
+  bottom: clamp(54px, 8vh, 86px) !important;
+}
+
+@media (max-width: 899px) {
+  .intro-photo-card {
+    top: 54% !important;
+    width: 30vw !important;
+    height: 44vw !important;
+    translate: -50% -50% !important;
+  }
+
+  .intro-card-center {
+    width: 34vw !important;
+    height: 50vw !important;
+  }
+}
+
+
+/* === Card finale reference layout fix ===
+   Match the Lando-style fan composition: centered group, wider spread,
+   large vertical cards, thin outline only. */
+.intro-card-copy {
+  top: clamp(34px, 5.4vh, 58px) !important;
+}
+
+.intro-card-copy h2 {
+  font-size: clamp(2.8rem, 5.2vw, 6.4rem) !important;
+  line-height: 0.86 !important;
+}
+
+.intro-photo-cards {
+  place-items: center !important;
+}
+
+.intro-photo-card {
+  top: 52.5% !important;
+  left: 50% !important;
+  width: clamp(205px, 17.5vw, 285px) !important;
+  height: clamp(325px, 28vw, 455px) !important;
+  border-radius: clamp(24px, 2vw, 38px) !important;
+  border: 1px solid rgba(21, 20, 18, 0.28) !important;
+  box-shadow:
+    0 28px 70px rgba(21, 20, 18, 0.17),
+    0 0 0 1px rgba(255, 255, 255, 0.68) !important;
+  translate: -50% -50% !important;
+  background: rgba(21, 20, 18, 0.06) !important;
+}
+
+.intro-card-center {
+  width: clamp(225px, 19vw, 310px) !important;
+  height: clamp(360px, 31vw, 505px) !important;
+  border-radius: clamp(28px, 2.25vw, 42px) !important;
+}
+
+.intro-photo-card img {
+  object-fit: cover !important;
+  object-position: center top !important;
+}
+
+.intro-card-caption {
+  bottom: 12px !important;
+  left: 12px !important;
+  right: 12px !important;
+  padding: 8px 11px !important;
+  font-size: clamp(0.48rem, 0.58vw, 0.64rem) !important;
+}
+
+.intro-card-hint {
+  bottom: clamp(34px, 5.2vh, 56px) !important;
+}
+
+@media (max-width: 899px) {
+  .intro-card-copy h2 {
+    font-size: clamp(2.25rem, 11vw, 4.6rem) !important;
+  }
+
+  .intro-photo-card {
+    top: 53% !important;
+    width: 38vw !important;
+    height: 58vw !important;
+  }
+
+  .intro-card-center {
+    width: 42vw !important;
+    height: 64vw !important;
+  }
+}
+
+
+/* === Hard fix: center the photo fan like the reference === */
+.intro-card-copy {
+  top: clamp(38px, 6vh, 68px) !important;
+}
+
+.intro-card-copy h2 {
+  font-size: clamp(2.8rem, 5vw, 6rem) !important;
+  line-height: 0.88 !important;
+  letter-spacing: -0.08em !important;
+}
+
+.intro-photo-cards {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 22 !important;
+  display: block !important;
+  pointer-events: none !important;
+  color: var(--ink);
+}
+
+.intro-photo-card {
+  position: absolute !important;
+  top: 53% !important;
+  left: 50% !important;
+  width: clamp(190px, 15.8vw, 255px) !important;
+  height: clamp(300px, 24.8vw, 400px) !important;
+  translate: -50% -50% !important;
+  padding: 0 !important;
+  border-radius: clamp(26px, 2vw, 40px) !important;
+  border: 1px solid rgba(20, 20, 18, 0.28) !important;
+  background: rgba(20, 20, 18, 0.06) !important;
+  box-shadow:
+    0 30px 70px rgba(20, 20, 18, 0.18),
+    0 0 0 1px rgba(255, 255, 255, 0.72) !important;
+  overflow: hidden !important;
+}
+
+.intro-card-center {
+  top: 53% !important;
+  width: clamp(205px, 17.2vw, 280px) !important;
+  height: clamp(330px, 28vw, 455px) !important;
+  border-radius: clamp(30px, 2.2vw, 46px) !important;
+}
+
+.intro-photo-card img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center top !important;
+}
+
+.intro-card-caption {
+  bottom: 12px !important;
+  left: 12px !important;
+  right: 12px !important;
+  padding: 8px 11px !important;
+  font-size: clamp(0.46rem, 0.56vw, 0.62rem) !important;
+}
+
+.intro-card-hint {
+  position: absolute !important;
+  left: 50% !important;
+  bottom: clamp(46px, 7vh, 76px) !important;
+  transform: translateX(-50%) !important;
+  z-index: 24 !important;
+}
+
+@media (max-width: 899px) {
+  .intro-photo-card {
+    top: 54% !important;
+    width: 34vw !important;
+    height: 50vw !important;
+  }
+
+  .intro-card-center {
+    width: 38vw !important;
+    height: 57vw !important;
+  }
+}
+
+
+/* === Requested card finale placement + hover-stuck bug support ===
+   1366 desktop uses lower card position; large desktop uses 80%.
+   All cards are shifted right from center using the requested calc(). */
+.intro-photo-card {
+  top: 87% !important;
+  left: calc(50% + clamp(110px, 10vw, 170px)) !important;
+  width: clamp(205px, 17.5vw, 285px) !important;
+  height: clamp(325px, 28vw, 455px) !important;
+  border-radius: clamp(24px, 2vw, 38px) !important;
+  border: 1px solid rgba(21, 20, 18, 0.28) !important;
+  box-shadow:
+    0 28px 70px rgba(21, 20, 18, 0.17),
+    0 0 0 1px rgba(255, 255, 255, 0.68) !important;
+  translate: -50% -50% !important;
+  background: rgba(21, 20, 18, 0.06) !important;
+}
+
+.intro-card-center {
+  top: 87% !important;
+  left: calc(50% + clamp(110px, 10vw, 170px)) !important;
+  width: clamp(205px, 17.5vw, 285px) !important;
+  height: clamp(325px, 28vw, 455px) !important;
+  border-radius: clamp(24px, 2vw, 38px) !important;
+}
+
+@media (min-width: 1600px) {
+  .intro-photo-card,
+  .intro-card-center {
+    top: 80% !important;
+  }
+}
+
+.intro-photo-cards {
+  pointer-events: none;
+}
+
+.intro-photo-card {
+  pointer-events: auto;
+}
+
+
+/* === Side-profile stage: remove horizontal background lines ===
+   Keep the ABOUT label lines/dots. Remove the extra straight horizontal
+   decorative lines and cover the horizontal grid strokes only in this stage. */
+.is-side-profile-stage .intro-stage-b::before,
+.is-side-profile-stage .intro-stage-b::after {
+  display: none !important;
+}
+
+.is-side-profile-stage .intro-story-bg {
+  background-image:
+    linear-gradient(90deg, rgba(255, 250, 244, 0.065) 1px, transparent 1px) !important;
+  background-size: 140px 100% !important;
+  opacity: 0.62 !important;
+}
+
+/* Keep the small ABOUT rule/dot details visible. */
+.is-side-profile-stage .intro-center-copy::before,
+.is-side-profile-stage .intro-center-copy::after {
+  display: block !important;
+}
+
+.is-side-profile-stage .intro-center-copy .mono-kicker::before,
+.is-side-profile-stage .intro-center-copy .mono-kicker::after {
+  display: inline-block !important;
+}
+
+
+/* === Smooth modal carousel pass ===
+   Softer slide distance, longer timing, tiny blur, and better easing.
+   Also prevents rapid transition stacking from feeling snappy/jittery. */
+.intro-modal-stage {
+  isolation: isolate;
+  transform-style: preserve-3d;
+}
+
+.intro-modal-card {
+  will-change: transform, opacity, filter;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+.intro-modal-card-in-initial {
+  animation: intro-modal-card-in 460ms cubic-bezier(0.16, 1, 0.3, 1) both !important;
+}
+
+.intro-modal-card-in-prev,
+.intro-modal-card-in-next {
+  z-index: 3;
+}
+
+.intro-modal-card-out-prev,
+.intro-modal-card-out-next {
+  z-index: 2;
+  pointer-events: none;
+}
+
+.intro-modal-card-in-prev {
+  animation: intro-modal-slide-in-prev 620ms cubic-bezier(0.16, 1, 0.3, 1) both !important;
+}
+
+.intro-modal-card-in-next {
+  animation: intro-modal-slide-in-next 620ms cubic-bezier(0.16, 1, 0.3, 1) both !important;
+}
+
+.intro-modal-card-out-prev {
+  animation: intro-modal-slide-out-prev 620ms cubic-bezier(0.7, 0, 0.22, 1) both !important;
+}
+
+.intro-modal-card-out-next {
+  animation: intro-modal-slide-out-next 620ms cubic-bezier(0.7, 0, 0.22, 1) both !important;
+}
+
+.intro-modal-nav {
+  transition:
+    background-color 240ms var(--ease-out),
+    color 240ms var(--ease-out),
+    transform 240ms var(--ease-out),
+    box-shadow 240ms var(--ease-out),
+    opacity 240ms var(--ease-out);
+}
+
+@keyframes intro-modal-slide-in-prev {
+  0% {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translate3d(-42%, 0, 0) scale(0.985) rotate(-1.4deg);
+  }
+  45% {
+    opacity: 0.78;
+    filter: blur(2px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+  }
+}
+
+@keyframes intro-modal-slide-in-next {
+  0% {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translate3d(42%, 0, 0) scale(0.985) rotate(1.4deg);
+  }
+  45% {
+    opacity: 0.78;
+    filter: blur(2px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+  }
+}
+
+@keyframes intro-modal-slide-out-prev {
+  0% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translate3d(42%, 0, 0) scale(0.985) rotate(1.4deg);
+  }
+}
+
+@keyframes intro-modal-slide-out-next {
+  0% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translate3d(-42%, 0, 0) scale(0.985) rotate(-1.4deg);
+  }
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import ScrollTrigger from "gsap/ScrollTrigger";
@@ -112,6 +112,8 @@ const introPhotos = [
   },
 ];
 
+const INTRO_PHOTO_SLIDE_MS = 340;
+
 const dissolveCharacters = "RAFFA<>/{}[]01TIMINGTASTEWORKSUX";
 const dissolveCells = Array.from({ length: 720 }, (_, index) => ({
   index,
@@ -120,14 +122,71 @@ const dissolveCells = Array.from({ length: 720 }, (_, index) => ({
 
 export default function RawExperience({ onReset }: RawExperienceProps) {
   const container = useRef<HTMLElement>(null);
+  const introCardHoverCleanup = useRef<(() => void)[]>([]);
   const [activeMode, setActiveMode] = useState(0);
   const [activeHero, setActiveHero] = useState(0);
   const [activeIntroPhoto, setActiveIntroPhoto] = useState<number | null>(null);
+  const [introPhotoDirection, setIntroPhotoDirection] = useState<"initial" | "prev" | "next">("initial");
+  const [outgoingIntroPhoto, setOutgoingIntroPhoto] = useState<number | null>(null);
 
-  const openIntroPhoto = (index: number) => setActiveIntroPhoto(index);
-  const closeIntroPhoto = () => setActiveIntroPhoto(null);
-  const showPrevIntroPhoto = () => setActiveIntroPhoto((current) => (current === null ? 0 : (current + introPhotos.length - 1) % introPhotos.length));
-  const showNextIntroPhoto = () => setActiveIntroPhoto((current) => (current === null ? 0 : (current + 1) % introPhotos.length));
+  const openIntroPhoto = (index: number) => {
+    setIntroPhotoDirection("initial");
+    setOutgoingIntroPhoto(null);
+    setActiveIntroPhoto(index);
+  };
+  const closeIntroPhoto = () => {
+    setOutgoingIntroPhoto(null);
+    setActiveIntroPhoto(null);
+  };
+  const showPrevIntroPhoto = () => {
+    if (activeIntroPhoto === null) return;
+    setOutgoingIntroPhoto(activeIntroPhoto);
+    setIntroPhotoDirection("prev");
+    setActiveIntroPhoto((current) => (current === null ? 0 : (current + introPhotos.length - 1) % introPhotos.length));
+  };
+  const showNextIntroPhoto = () => {
+    if (activeIntroPhoto === null) return;
+    setOutgoingIntroPhoto(activeIntroPhoto);
+    setIntroPhotoDirection("next");
+    setActiveIntroPhoto((current) => (current === null ? 0 : (current + 1) % introPhotos.length));
+  };
+
+  useEffect(() => {
+    if (outgoingIntroPhoto === null) return;
+    const timeout = window.setTimeout(() => setOutgoingIntroPhoto(null), INTRO_PHOTO_SLIDE_MS);
+    return () => window.clearTimeout(timeout);
+  }, [activeIntroPhoto, outgoingIntroPhoto]);
+
+  useEffect(() => {
+    if (activeIntroPhoto === null) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setOutgoingIntroPhoto(null);
+        setActiveIntroPhoto(null);
+        return;
+      }
+
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        setOutgoingIntroPhoto(activeIntroPhoto);
+        setIntroPhotoDirection("prev");
+        setActiveIntroPhoto((current) => (current === null ? 0 : (current + introPhotos.length - 1) % introPhotos.length));
+        return;
+      }
+
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        setOutgoingIntroPhoto(activeIntroPhoto);
+        setIntroPhotoDirection("next");
+        setActiveIntroPhoto((current) => (current === null ? 0 : (current + 1) % introPhotos.length));
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [activeIntroPhoto, outgoingIntroPhoto]);
 
   useGSAP(
     () => {
@@ -161,6 +220,8 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
         activeTileSet = [];
       };
 
+      let updateIntroCardHoverFromPoint: (x: number, y: number) => void = () => {};
+
       const movePointer = (event: PointerEvent) => {
         xTo?.(event.clientX);
         yTo?.(event.clientY);
@@ -175,6 +236,7 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
           ease: "power3.out",
           overwrite: "auto",
         });
+        updateIntroCardHoverFromPoint(event.clientX, event.clientY);
 
         if (tileField && tiles.length) {
           const rect = tileField.getBoundingClientRect();
@@ -246,6 +308,135 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
         };
       });
 
+      introCardHoverCleanup.current.forEach((cleanup) => cleanup());
+      introCardHoverCleanup.current = [];
+      let introCardsCanHover = false;
+      let activeIntroCardIndex: number | null = null;
+      const introCards = gsap.utils.toArray<HTMLElement>(".intro-photo-card");
+      const introCardHoverTweens: gsap.core.Tween[] = [];
+      const trackIntroCardTween = (tween: gsap.core.Tween) => {
+        introCardHoverTweens.push(tween);
+      };
+      const killIntroCardHoverTweens = () => {
+        introCardHoverTweens.splice(0).forEach((tween) => tween.kill());
+      };
+      const resetIntroCards = () => {
+        if (activeIntroCardIndex === null) return;
+        activeIntroCardIndex = null;
+        killIntroCardHoverTweens();
+        trackIntroCardTween(gsap.to(".intro-card-left", {
+          x: -185,
+          y: 28,
+          rotate: -11,
+          scale: 1,
+          zIndex: 2,
+          duration: 0.42,
+          ease: "power3.out",
+        }));
+        trackIntroCardTween(gsap.to(".intro-card-center", {
+          x: 0,
+          y: -16,
+          rotate: 0,
+          scale: 1.08,
+          zIndex: 4,
+          duration: 0.42,
+          ease: "power3.out",
+        }));
+        trackIntroCardTween(gsap.to(".intro-card-right", {
+          x: 185,
+          y: 28,
+          rotate: 11,
+          scale: 1,
+          zIndex: 2,
+          duration: 0.42,
+          ease: "power3.out",
+        }));
+      };
+
+      const activateIntroCard = (index: number) => {
+        if (!introCardsCanHover) return;
+        if (activeIntroCardIndex === index) return;
+        activeIntroCardIndex = index;
+        killIntroCardHoverTweens();
+        const card = introCards[index];
+        const isLeft = index === 0;
+        const isCenter = index === 1;
+        const isRight = index === 2;
+
+        trackIntroCardTween(gsap.to(".intro-photo-card", {
+          filter: "saturate(0.82) brightness(0.82)",
+          duration: 0.28,
+          ease: "power3.out",
+        }));
+
+        trackIntroCardTween(gsap.to(card, {
+          x: isLeft ? -230 : isRight ? 230 : 0,
+          y: isCenter ? -34 : 8,
+          rotate: isLeft ? -8 : isRight ? 8 : 0,
+          scale: isCenter ? 1.16 : 1.1,
+          zIndex: 8,
+          filter: "saturate(1.04) brightness(1)",
+          duration: 0.34,
+          ease: "power3.out",
+        }));
+
+        trackIntroCardTween(gsap.to(".intro-card-left", {
+          x: isLeft ? -230 : isCenter ? -260 : -210,
+          y: isLeft ? 8 : 42,
+          rotate: isLeft ? -8 : -15,
+          scale: isLeft ? 1.1 : 0.92,
+          duration: 0.34,
+          ease: "power3.out",
+        }));
+
+        trackIntroCardTween(gsap.to(".intro-card-center", {
+          x: isLeft ? 60 : isRight ? -60 : 0,
+          y: isCenter ? -34 : -12,
+          rotate: isLeft ? 5 : isRight ? -5 : 0,
+          scale: isCenter ? 1.16 : 1.02,
+          duration: 0.34,
+          ease: "power3.out",
+        }));
+
+        trackIntroCardTween(gsap.to(".intro-card-right", {
+          x: isRight ? 230 : isCenter ? 260 : 210,
+          y: isRight ? 8 : 42,
+          rotate: isRight ? 8 : 15,
+          scale: isRight ? 1.1 : 0.92,
+          duration: 0.34,
+          ease: "power3.out",
+        }));
+      };
+
+      updateIntroCardHoverFromPoint = (x: number, y: number) => {
+        if (!introCardsCanHover) return;
+
+        const element = document.elementFromPoint(x, y);
+        const card = element?.closest?.(".intro-photo-card") as HTMLElement | null;
+        const index = card ? introCards.indexOf(card) : -1;
+
+        if (index >= 0) {
+          activateIntroCard(index);
+          return;
+        }
+
+        resetIntroCards();
+      };
+
+      introCards.forEach((card, index) => {
+        const focus = () => activateIntroCard(index);
+        const blur = () => {
+          if (!introCardsCanHover) return;
+          resetIntroCards();
+        };
+        card.addEventListener("focus", focus);
+        card.addEventListener("blur", blur);
+        introCardHoverCleanup.current.push(() => {
+          card.removeEventListener("focus", focus);
+          card.removeEventListener("blur", blur);
+        });
+      });
+
       const mm = gsap.matchMedia(root);
 
       mm.add(
@@ -271,7 +462,8 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
           });
           gsap.set(".hero-scroll-frame", { "--hero-desat": 0 });
           gsap.set(".intro-word", { yPercent: 120, rotate: 4, autoAlpha: 0 });
-          gsap.set(".intro-copy-left, .intro-copy-right, .intro-front, .intro-photo-card, .intro-card-hint", { autoAlpha: 0 });
+          gsap.set(".intro-copy-left, .intro-copy-right, .intro-front, .intro-photo-card, .intro-card-hint, .intro-card-copy", { autoAlpha: 0 });
+          gsap.set(".intro-card-bg-wipe", { autoAlpha: 0, xPercent: -50, yPercent: -50, scale: 0 });
           gsap.set(".intro-stage-a, .intro-stage-b, .intro-side, .intro-center-copy", { autoAlpha: 1 });
           gsap.set(".intro-copy-right", { x: 70, y: 24, rotate: 2 });
           gsap.set(".intro-front", { yPercent: 70, scale: 0.88, rotate: -2 });
@@ -382,6 +574,25 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
               pin: true,
               scrub: true,
               anticipatePin: 1,
+              onUpdate: (self) => {
+                const inCardFinale = self.progress > 0.69;
+
+                const inSideProfile = self.progress > 0.34 && self.progress < 0.69;
+                root.classList.toggle("is-side-profile-stage", inSideProfile);
+
+                if (!inCardFinale) {
+                  introCardsCanHover = false;
+                  activeIntroCardIndex = null;
+                  killIntroCardHoverTweens();
+                  gsap.set(".intro-photo-cards", { pointerEvents: "none" });
+                  gsap.set(".intro-photo-card", { clearProps: "filter,zIndex" });
+                  return;
+                }
+
+                introCardsCanHover = true;
+                root.classList.remove("is-side-profile-stage");
+                gsap.set(".intro-photo-cards", { pointerEvents: "auto" });
+              },
             },
             defaults: { ease: "none" },
           });
@@ -433,8 +644,11 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
             .to(".intro-side-left", { x: "-18vw", y: "8vh", rotate: -7, scale: 0.82, autoAlpha: 0.18, duration: 0.7, ease: "power2.inOut" })
             .to(".intro-side-right", { x: "18vw", y: "8vh", rotate: 7, scale: 0.82, autoAlpha: 0.18, duration: 0.7, ease: "power2.inOut" }, "<")
             .to(".intro-center-copy", { y: -70, autoAlpha: 0, filter: "blur(8px)", duration: 0.5, ease: "power2.inOut" }, "<+0.05")
-            .to(".intro-photo-cards", { autoAlpha: 1, duration: 0.05 }, "<+0.16")
-            .to(".intro-photo-card", { autoAlpha: 1, x: 0, y: 0, rotate: (index) => [-7, 1.5, 7][index], scale: (index) => (index === 1 ? 1.06 : 1), duration: 0.72, stagger: 0.08, ease: "power3.out" }, "<")
+            .to(".intro-side", { autoAlpha: 0, filter: "blur(10px)", scale: 0.72, duration: 0.48, ease: "power2.inOut" }, "<")
+            .to(".intro-card-bg-wipe", { autoAlpha: 1, scale: 1, duration: 0.78, ease: "power3.inOut" }, "<-0.04")
+            .to(".intro-photo-cards", { autoAlpha: 1, duration: 0.05 }, "<+0.24")
+            .to(".intro-card-copy", { autoAlpha: 1, y: 0, duration: 0.48, ease: "power3.out" }, "<+0.04")
+            .to(".intro-photo-card", { autoAlpha: 1, x: (index) => [-185, 0, 185][index], y: (index) => [28, -16, 28][index], rotate: (index) => [-11, 0, 11][index], scale: (index) => (index === 1 ? 1.08 : 1), duration: 0.72, stagger: 0.08, ease: "power3.out" }, "<+0.05")
             .to(".intro-card-hint", { autoAlpha: 1, y: 0, duration: 0.35, ease: "power2.out" }, ">-0.2")
             .to({}, { duration: 0.45 });
 
@@ -571,9 +785,13 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
       );
 
       return () => {
+        root.classList.remove("is-side-profile-stage");
+        killIntroCardHoverTweens();
         window.removeEventListener("pointermove", movePointer);
         hero?.removeEventListener("pointerleave", resetActiveTiles);
         cleanupHover.forEach((cleanup) => cleanup());
+        introCardHoverCleanup.current.forEach((cleanup) => cleanup());
+        introCardHoverCleanup.current = [];
         mm.revert();
       };
     },
@@ -581,7 +799,7 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
   );
 
   return (
-    <main className="dossier" ref={container}>
+    <main className={activeIntroPhoto === null ? "dossier" : "dossier is-intro-modal-open"} ref={container}>
       <div className="dossier-cursor" aria-hidden="true" />
       <div className="progress-line" aria-hidden="true"><span className="progress-fill" /></div>
       <button className="hero-lock" type="button" onClick={onReset}>lock</button>
@@ -656,73 +874,80 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
 
         <div className="intro-stage intro-stage-a">
           <section className="intro-copy-left">
-          <div className="intro-section-index" aria-hidden="true">
-            <span>01</span>
-            <i />
-            <span>intro</span>
-          </div>
-          <h2 className="intro-lead">
-            <span className="intro-word intro-word-small">I&apos;m</span>
-            <span className="intro-word intro-word-name">Raffa.</span>
-            <span className="intro-word intro-word-line">I build <strong>frontend,</strong></span>
-            <span className="intro-word intro-word-line muted">design screens,</span>
-            <span className="intro-word intro-word-line">and cut <strong>videos.</strong></span>
-          </h2>
-          <p className="intro-body-copy">
-            Different tools, same habit: I care about timing, taste, and whether the thing actually works when someone touches it.
-          </p>
-        </section>
+            <div className="intro-section-index" aria-hidden="true">
+              <span>01</span>
+              <i />
+              <span>intro</span>
+            </div>
+            <h2 className="intro-lead">
+              <span className="intro-word intro-word-small">I&apos;m</span>
+              <span className="intro-word intro-word-name">Raffa.</span>
+              <span className="intro-word intro-word-line">I build <strong>frontend,</strong></span>
+              <span className="intro-word intro-word-line muted">design screens,</span>
+              <span className="intro-word intro-word-line">and cut <strong>videos.</strong></span>
+            </h2>
+            <p className="intro-body-copy">
+              Different tools, same habit: I care about timing, taste, and whether the thing actually works when someone touches it.
+            </p>
+          </section>
 
-        <section className="intro-copy-right" aria-label="What Raffa does">
-          <div className="intro-right-heading">
-            <span>what i do</span>
-            <i />
-          </div>
-          <div className="intro-habit intro-skill-list">
-            <article className="intro-word intro-skill-item">
-              <span className="intro-skill-number">01</span>
-              <div>
-                <h3>Build frontend</h3>
-                <p>Responsive interfaces, real flows, and code that stays maintainable.</p>
-              </div>
-            </article>
-            <article className="intro-word intro-skill-item">
-              <span className="intro-skill-number">02</span>
-              <div>
-                <h3>Design screens</h3>
-                <p>Clean layouts with taste, hierarchy, and clear visual focus.</p>
-              </div>
-            </article>
-            <article className="intro-word intro-skill-item">
-              <span className="intro-skill-number">03</span>
-              <div>
-                <h3>Cut videos</h3>
-                <p>Timing, pacing, and motion that make the moment land right.</p>
-              </div>
-            </article>
-          </div>
-        </section>
+          <section className="intro-copy-right" aria-label="What Raffa does">
+            <div className="intro-right-heading">
+              <span>what i do</span>
+              <i />
+            </div>
+            <div className="intro-habit intro-skill-list">
+              <article className="intro-word intro-skill-item">
+                <span className="intro-skill-number">01</span>
+                <div>
+                  <h3>Build frontend</h3>
+                  <p>Responsive interfaces, real flows, and code that stays maintainable.</p>
+                </div>
+              </article>
+              <article className="intro-word intro-skill-item">
+                <span className="intro-skill-number">02</span>
+                <div>
+                  <h3>Design screens</h3>
+                  <p>Clean layouts with taste, hierarchy, and clear visual focus.</p>
+                </div>
+              </article>
+              <article className="intro-word intro-skill-item">
+                <span className="intro-skill-number">03</span>
+                <div>
+                  <h3>Cut videos</h3>
+                  <p>Timing, pacing, and motion that make the moment land right.</p>
+                </div>
+              </article>
+            </div>
+          </section>
 
-        <figure className="intro-front" aria-label="Front fierce portrait placeholder">
-          <Image src="/assets/fierce/fierce-front-removed.png" alt="front fierce placeholder" width={941} height={1672} />
-        </figure>
+          <figure className="intro-front" aria-label="Front fierce portrait placeholder">
+            <Image src="/assets/fierce/fierce-front-removed.png" alt="front fierce placeholder" width={941} height={1672} />
+          </figure>
         </div>
 
         <div className="intro-stage intro-stage-b">
-        <figure className="intro-side intro-side-left" aria-label="Left side fierce portrait placeholder facing inward">
-          <Image src="/assets/fierce/fierce-right-removed.png" alt="left inward fierce placeholder" width={941} height={1672} />
-        </figure>
-        <figure className="intro-side intro-side-right" aria-label="Right side fierce portrait placeholder facing inward">
-          <Image src="/assets/fierce/fierce-left-removed.png" alt="right inward fierce placeholder" width={941} height={1672} />
-        </figure>
+          <figure className="intro-side intro-side-left" aria-label="Left side fierce portrait placeholder facing inward">
+            <Image src="/assets/fierce/fierce-right-removed.png" alt="left inward fierce placeholder" width={941} height={1672} />
+          </figure>
+          <figure className="intro-side intro-side-right" aria-label="Right side fierce portrait placeholder facing inward">
+            <Image src="/assets/fierce/fierce-left-removed.png" alt="right inward fierce placeholder" width={941} height={1672} />
+          </figure>
 
-        <section className="intro-center-copy">
-          <p className="mono-kicker">same instinct</p>
-          <h2>Code, design, and editing are different tools. The instinct is the same: build the moment right.</h2>
-        </section>
+          <section className="intro-center-copy">
+            <p className="mono-kicker">about</p>
+            <h2>UPI computer science student, building digital things with clarity, curiosity, and care.</h2>
+            <p className="intro-center-body">I like turning ideas into simple experiences that feel intentional, useful, and easy to touch.</p>
+          </section>
         </div>
 
+        <div className="intro-card-bg-wipe" aria-hidden="true" />
+
         <div className="intro-photo-cards" aria-label="Fierce photo card set">
+          <div className="intro-card-copy">
+            <p>photo details</p>
+            <h2>See the full photo</h2>
+          </div>
           {introPhotos.map((photo, index) => (
             <button
               className={`intro-photo-card ${index === 0 ? "intro-card-left" : index === 1 ? "intro-card-center" : "intro-card-right"}`}
@@ -735,20 +960,8 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
               <span className="intro-card-caption"><span>{photo.number}</span> {photo.label}</span>
             </button>
           ))}
-          <p className="intro-card-hint">hover / click to inspect</p>
         </div>
 
-        {activeIntroPhoto !== null && (
-          <div className="intro-photo-modal" role="dialog" aria-modal="true" aria-label={`${introPhotos[activeIntroPhoto].label} preview`} onClick={closeIntroPhoto}>
-            <button className="intro-modal-close" onClick={closeIntroPhoto} type="button" aria-label="Close photo preview">×</button>
-            <button className="intro-modal-nav intro-modal-prev" onClick={(event) => { event.stopPropagation(); showPrevIntroPhoto(); }} type="button" aria-label="Previous photo">←</button>
-            <figure className="intro-modal-card" onClick={(event) => event.stopPropagation()}>
-              <Image src={introPhotos[activeIntroPhoto].src} alt={`${introPhotos[activeIntroPhoto].label} preview`} width={941} height={1672} />
-              <figcaption><span>{introPhotos[activeIntroPhoto].number}</span>{introPhotos[activeIntroPhoto].label}</figcaption>
-            </figure>
-            <button className="intro-modal-nav intro-modal-next" onClick={(event) => { event.stopPropagation(); showNextIntroPhoto(); }} type="button" aria-label="Next photo">→</button>
-          </div>
-        )}
       </section>
 
       <section className="proof-reel" id="proof" aria-label="Pinned proof reel">
@@ -856,6 +1069,24 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
         <h2>Swap the photos, tighten the story, ship the link.</h2>
         <a href="https://github.com/piipapoy/cretivox-frontend" target="_blank" rel="noreferrer">open GitHub</a>
       </footer>
+
+      {activeIntroPhoto !== null && (
+        <div className="intro-photo-modal" role="dialog" aria-modal="true" aria-label={`${introPhotos[activeIntroPhoto].label} preview`} onClick={closeIntroPhoto}>
+          <button className="intro-modal-close" onClick={closeIntroPhoto} type="button" aria-label="Close photo preview">×</button>
+          <button className="intro-modal-nav intro-modal-prev" onClick={(event) => { event.stopPropagation(); showPrevIntroPhoto(); }} type="button" aria-label="Previous photo">←</button>
+          <div className="intro-modal-stage" onClick={(event) => event.stopPropagation()}>
+            {outgoingIntroPhoto !== null && outgoingIntroPhoto !== activeIntroPhoto && (
+              <figure className={`intro-modal-card intro-modal-card-out-${introPhotoDirection}`} key={`out-${outgoingIntroPhoto}-${activeIntroPhoto}`}>
+                <Image src={introPhotos[outgoingIntroPhoto].src} alt={`${introPhotos[outgoingIntroPhoto].label} preview`} width={941} height={1672} sizes="(max-width: 899px) 68vw, 44vw" priority />
+              </figure>
+            )}
+            <figure className={`intro-modal-card intro-modal-card-in-${introPhotoDirection}`} key={`in-${activeIntroPhoto}`}>
+              <Image src={introPhotos[activeIntroPhoto].src} alt={`${introPhotos[activeIntroPhoto].label} preview`} width={941} height={1672} sizes="(max-width: 899px) 68vw, 44vw" priority />
+            </figure>
+          </div>
+          <button className="intro-modal-nav intro-modal-next" onClick={(event) => { event.stopPropagation(); showNextIntroPhoto(); }} type="button" aria-label="Next photo">→</button>
+        </div>
+      )}
     </main>
   );
 }
