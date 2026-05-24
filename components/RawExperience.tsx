@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import ScrollTrigger from "gsap/ScrollTrigger";
@@ -122,16 +122,23 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
   const [activeIntroPhoto, setActiveIntroPhoto] = useState<number | null>(null);
   const [introPhotoDirection, setIntroPhotoDirection] = useState<"initial" | "prev" | "next">("initial");
   const [outgoingIntroPhoto, setOutgoingIntroPhoto] = useState<number | null>(null);
+  const [isIntroPhotoClosing, setIsIntroPhotoClosing] = useState(false);
 
   const openIntroPhoto = (index: number) => {
+    setIsIntroPhotoClosing(false);
     setIntroPhotoDirection("initial");
     setOutgoingIntroPhoto(null);
     setActiveIntroPhoto(index);
   };
-  const closeIntroPhoto = () => {
+  const closeIntroPhoto = useCallback(() => {
+    if (activeIntroPhoto === null || isIntroPhotoClosing) return;
     setOutgoingIntroPhoto(null);
-    setActiveIntroPhoto(null);
-  };
+    setIsIntroPhotoClosing(true);
+    window.setTimeout(() => {
+      setActiveIntroPhoto(null);
+      setIsIntroPhotoClosing(false);
+    }, 320);
+  }, [activeIntroPhoto, isIntroPhotoClosing]);
   const showPrevIntroPhoto = () => {
     if (activeIntroPhoto === null) return;
     setOutgoingIntroPhoto(activeIntroPhoto);
@@ -157,8 +164,7 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         event.preventDefault();
-        setOutgoingIntroPhoto(null);
-        setActiveIntroPhoto(null);
+        closeIntroPhoto();
         return;
       }
 
@@ -180,7 +186,7 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [activeIntroPhoto, outgoingIntroPhoto]);
+  }, [activeIntroPhoto, closeIntroPhoto, outgoingIntroPhoto]);
 
   useEffect(() => {
     if (activeIntroPhoto !== null) return;
@@ -725,7 +731,8 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
             .to(".intro-card-bg-wipe", { autoAlpha: 1, scale: 1, duration: 0.78, ease: "power3.inOut" }, "<-0.04")
             .to(".intro-photo-cards", { autoAlpha: 1, duration: 0.05 }, "<+0.24")
             .to(".intro-card-copy", { autoAlpha: 1, y: 0, duration: 0.48, ease: "power3.out" }, "<+0.04")
-            .to(".intro-photo-card", { autoAlpha: 1, x: (index) => [-185, 0, 185][index], y: (index) => [28, -16, 28][index], rotate: (index) => [-11, 0, 11][index], scale: (index) => (index === 1 ? 1.08 : 1), duration: 0.72, stagger: 0.08, ease: "power3.out" }, "<+0.05");
+            .to(".intro-photo-card", { autoAlpha: 1, x: (index) => [-185, 0, 185][index], y: (index) => [28, -16, 28][index], rotate: (index) => [-11, 0, 11][index], scale: (index) => (index === 1 ? 1.08 : 1), duration: 0.72, stagger: 0.08, ease: "power3.out" }, "<+0.05")
+            .to({}, { duration: 0.18 });
 
           const projectRail = root.querySelector<HTMLElement>(".project-rail");
           const projectSection = root.querySelector<HTMLElement>(".project-story");
@@ -761,7 +768,7 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
             gsap.timeline({
               scrollTrigger: {
                 trigger: projectSection,
-                start: "top 160%",
+                start: "top 118%",
                 end: "top top",
                 scrub: desktop ? 0.5 : true,
                 invalidateOnRefresh: true,
@@ -855,6 +862,54 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
                 xPercent: -18,
                 duration: 1,
               }, 0);
+          }
+
+          const finalFooter = root.querySelector<HTMLElement>(".final-footer");
+          if (finalFooter) {
+            gsap.set(".footer-kicker, .footer-title, .footer-link", {
+              autoAlpha: 0,
+              y: 36,
+            });
+            gsap.set(".footer-bg-word", { autoAlpha: 0, xPercent: 8 });
+            gsap.set(".footer-orbit", { scale: 0.82, autoAlpha: 0 });
+
+            gsap.timeline({
+              scrollTrigger: {
+                trigger: finalFooter,
+                start: "top 78%",
+                end: "top 18%",
+                scrub: desktop ? 0.54 : true,
+              },
+              defaults: { ease: "none" },
+            })
+              .to(".footer-bg-word", {
+                autoAlpha: 1,
+                xPercent: 0,
+                duration: 0.44,
+              }, 0)
+              .to(".footer-orbit", {
+                autoAlpha: 1,
+                scale: 1,
+                duration: 0.5,
+                stagger: 0.08,
+              }, 0.02)
+              .to(".footer-kicker, .footer-title, .footer-link", {
+                autoAlpha: 1,
+                y: 0,
+                duration: 0.56,
+                stagger: 0.07,
+                ease: "power3.out",
+              }, 0.08);
+
+            gsap.to(".footer-bg-word", {
+              xPercent: -10,
+              scrollTrigger: {
+                trigger: finalFooter,
+                start: "top bottom",
+                end: "bottom top",
+                scrub: true,
+              },
+            });
           }
 
           ScrollTrigger.create({
@@ -1114,10 +1169,33 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
         </svg>
       </div>
 
+      <section className="final-footer" aria-label="Final source link">
+        <div className="footer-bg-word" aria-hidden="true">SOURCE</div>
+        <span className="footer-orbit footer-orbit-one" aria-hidden="true" />
+        <span className="footer-orbit footer-orbit-two" aria-hidden="true" />
+
+        <div className="footer-inner">
+          <p className="footer-kicker">project link</p>
+          <h2 className="footer-title">
+            Fine, here’s the GitHub.
+          </h2>
+          <a
+            className="footer-link"
+            href="https://github.com/piipapoy/cretivox-frontend"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Open the Cretivox frontend GitHub repository"
+          >
+            <span>Open repository</span>
+            <strong>↗</strong>
+          </a>
+        </div>
+      </section>
+
       {activeIntroPhoto !== null && (
-        <div className="intro-photo-modal" role="dialog" aria-modal="true" aria-label={`${introPhotos[activeIntroPhoto].label} preview`} onClick={closeIntroPhoto}>
-          <button className="intro-modal-close" onClick={closeIntroPhoto} type="button" aria-label="Close photo preview">×</button>
-          <button className="intro-modal-nav intro-modal-prev" onClick={(event) => { event.stopPropagation(); showPrevIntroPhoto(); }} type="button" aria-label="Previous photo">←</button>
+        <div className={`intro-photo-modal${isIntroPhotoClosing ? " is-closing" : ""}`} role="dialog" aria-modal="true" aria-label={`${introPhotos[activeIntroPhoto].label} preview`} onClick={closeIntroPhoto}>
+          <button className="intro-modal-close" onClick={(event) => { event.stopPropagation(); closeIntroPhoto(); }} type="button" aria-label="Close photo preview" disabled={isIntroPhotoClosing}>×</button>
+          <button className="intro-modal-nav intro-modal-prev" onClick={(event) => { event.stopPropagation(); if (!isIntroPhotoClosing) showPrevIntroPhoto(); }} type="button" aria-label="Previous photo" disabled={isIntroPhotoClosing}>←</button>
           <div className="intro-modal-stage" onClick={(event) => event.stopPropagation()}>
             {outgoingIntroPhoto !== null && outgoingIntroPhoto !== activeIntroPhoto && (
               <figure className={`intro-modal-card intro-modal-card-out-${introPhotoDirection}`} key={`out-${outgoingIntroPhoto}-${activeIntroPhoto}`}>
@@ -1128,7 +1206,7 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
               <Image src={introPhotos[activeIntroPhoto].src} alt={`${introPhotos[activeIntroPhoto].label} preview`} width={941} height={1672} sizes="(max-width: 899px) 68vw, 44vw" priority />
             </figure>
           </div>
-          <button className="intro-modal-nav intro-modal-next" onClick={(event) => { event.stopPropagation(); showNextIntroPhoto(); }} type="button" aria-label="Next photo">→</button>
+          <button className="intro-modal-nav intro-modal-next" onClick={(event) => { event.stopPropagation(); if (!isIntroPhotoClosing) showNextIntroPhoto(); }} type="button" aria-label="Next photo" disabled={isIntroPhotoClosing}>→</button>
         </div>
       )}
     </main>
