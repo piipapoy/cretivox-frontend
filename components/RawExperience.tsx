@@ -51,6 +51,62 @@ const introPhotos = [
   },
 ];
 
+const projectStories = [
+  {
+    number: "01",
+    year: "2026",
+    title: "GymAI",
+    label: "frontend flow",
+    note: "A product flow for tracking routines, reading progress, and making workout decisions feel simple.",
+    proof: "layout hierarchy / dashboard thinking / reusable UI",
+  },
+  {
+    number: "02",
+    year: "2026",
+    title: "SampahKita",
+    label: "public app",
+    note: "Turning a serious topic into an interface that feels approachable, clear, and easy to move through.",
+    proof: "information design / navigation / mobile-first structure",
+  },
+  {
+    number: "03",
+    year: "2025",
+    title: "Qiroaat",
+    label: "learning interface",
+    note: "A text-heavy experience shaped with spacing, rhythm, and hierarchy so the content does not feel dead.",
+    proof: "readability / content structure / visual restraint",
+  },
+  {
+    number: "04",
+    year: "2025",
+    title: "Motion Cuts",
+    label: "editing instinct",
+    note: "Video editing trained the same thing I use in frontend: timing, pacing, and knowing when a moment should land.",
+    proof: "motion taste / transition rhythm / storytelling",
+  },
+  {
+    number: "05",
+    year: "2026",
+    title: "Raw Signal",
+    label: "personal system",
+    note: "A one-page identity experiment built around scroll, type, interaction, and how I want people to read me.",
+    proof: "GSAP / visual direction / end-to-end build",
+  },
+];
+
+const projectTransitionBars = Array.from({ length: 22 }, (_, index) => index);
+
+const cretivoxLogoPaths = [
+  "M274.04 0C408 0 470.56 71.4 463.76 163.88L463.08 170.68H340.68V163.88C339.32 113.56 312.8 89.76 263.16 89.76C191.08 89.76 128.52 157.76 128.52 286.28C128.52 368.56 165.24 398.48 209.44 398.48C257.04 398.48 293.08 369.24 312.12 317.56L314.84 310.76H437.24L435.2 317.56C403.92 430.44 314.16 488.24 196.52 488.24C79.56 488.24 0 421.6 0 294.44C0 111.52 127.84 0 274.04 0Z",
+  "M942.889 115.6C942.889 187 901.409 235.28 822.529 255.68C864.689 274.04 878.289 314.16 878.289 388.28C878.289 427.04 883.729 456.28 893.929 478.72H760.649C757.249 453.56 755.889 428.4 755.889 374.68C755.889 329.8 740.929 303.28 712.369 301.24C698.769 300.56 687.889 300.56 674.289 300.56H646.409L615.129 478.72H492.729L575.689 9.52H762.009C791.249 9.52 810.289 10.2 834.769 12.92C893.929 19.72 942.889 48.96 942.889 115.6ZM662.049 212.16H706.929C719.849 212.16 730.729 212.16 739.569 211.48C775.609 208.76 809.609 195.16 809.609 147.56C809.609 116.96 788.529 107.44 761.329 105.4C752.489 104.72 741.609 104.72 728.689 104.72H681.089L662.049 212.16Z",
+  "M1134.64 104.72L1119 195.84H1335.92L1318.92 291.04H1102L1085.68 383.52H1323L1306 478.72H946.284L1029.24 9.52H1382.16L1365.16 104.72H1134.64Z",
+  "M1828.88 104.72H1677.24L1611.28 478.72H1488.88L1554.84 104.72H1401.84L1419.52 9.52H1846.56L1828.88 104.72Z",
+  "M1925.32 478.72H1802.92L1885.88 9.52H2008.28L1925.32 478.72Z",
+  "M2309.98 478.72H2151.54L2069.26 9.52H2202.54L2248.78 384.2L2427.62 9.52H2557.5L2309.98 478.72Z",
+  "M2798.16 0C2941.64 0 3022.56 87.04 3022.56 203.32C3022.56 380.12 2901.52 488.24 2749.2 488.24C2605.72 488.24 2524.8 401.2 2524.8 284.92C2524.8 108.12 2645.84 0 2798.16 0ZM2753.28 398.48C2847.8 398.48 2893.36 294.44 2893.36 206.72C2893.36 138.04 2859.36 89.76 2794.08 89.76C2699.56 89.76 2654 193.8 2654 281.52C2654 350.2 2688 398.48 2753.28 398.48Z",
+  "M3337.82 245.48L3473.14 478.72H3333.74L3250.1 321.64L3129.74 478.72H2982.18L3197.74 239.36L3076.7 9.52H3214.74L3284.78 164.56L3407.18 9.52H3547.94L3337.82 245.48Z",
+];
+
 const INTRO_PHOTO_SLIDE_MS = 340;
 
 const dissolveCharacters = "RAFFA<>/{}[]01TIMINGTASTEWORKSUX";
@@ -669,9 +725,137 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
             .to(".intro-card-bg-wipe", { autoAlpha: 1, scale: 1, duration: 0.78, ease: "power3.inOut" }, "<-0.04")
             .to(".intro-photo-cards", { autoAlpha: 1, duration: 0.05 }, "<+0.24")
             .to(".intro-card-copy", { autoAlpha: 1, y: 0, duration: 0.48, ease: "power3.out" }, "<+0.04")
-            .to(".intro-photo-card", { autoAlpha: 1, x: (index) => [-185, 0, 185][index], y: (index) => [28, -16, 28][index], rotate: (index) => [-11, 0, 11][index], scale: (index) => (index === 1 ? 1.08 : 1), duration: 0.72, stagger: 0.08, ease: "power3.out" }, "<+0.05")
-            .to(".intro-card-hint", { autoAlpha: 1, y: 0, duration: 0.35, ease: "power2.out" }, ">-0.2")
-            .to({}, { duration: 0.45 });
+            .to(".intro-photo-card", { autoAlpha: 1, x: (index) => [-185, 0, 185][index], y: (index) => [28, -16, 28][index], rotate: (index) => [-11, 0, 11][index], scale: (index) => (index === 1 ? 1.08 : 1), duration: 0.72, stagger: 0.08, ease: "power3.out" }, "<+0.05");
+
+          const projectRail = root.querySelector<HTMLElement>(".project-rail");
+          const projectSection = root.querySelector<HTMLElement>(".project-story");
+          if (projectRail && projectSection) {
+            const projectDistance = () => Math.max(0, projectRail.scrollWidth - window.innerWidth + window.innerWidth * 0.08);
+
+            gsap.set(".project-transition-panel", {
+              yPercent: (index) => (index % 2 === 0 ? 110 : -110),
+            });
+
+            gsap.set(".project-transition-logo", { autoAlpha: 0, scale: 0.98, y: 8 });
+            gsap.set(".project-transition-logo path", {
+              autoAlpha: 0,
+              fillOpacity: 1,
+              y: 26,
+              scale: 0.96,
+              transformOrigin: "50% 50%",
+            });
+            gsap.set(".project-card", {
+              autoAlpha: 0,
+              x: (index) => (desktop ? window.innerWidth * 0.56 + index * 34 : window.innerWidth * 0.34),
+              y: (index) => [-34, 92, -82, 46, -18, 70][index % 6],
+              rotate: (index) => [-2.5, 1.5, 0, -1, 2, -1.5][index % 6],
+            });
+            gsap.set(".project-kicker, .project-headline, .project-subcopy", { autoAlpha: 0, y: 34 });
+            gsap.set(".project-bg-word", { autoAlpha: 0, xPercent: 0 });
+            gsap.set(".project-contours path", { strokeDashoffset: 1 });
+
+            // Covered reveal:
+            // 1) Bars close while the user is still visually on the photo-card screen.
+            // 2) While the screen is fully covered, the page scrolls to the project section behind it.
+            // 3) Bars only open once the project section is pinned at the top.
+            gsap.timeline({
+              scrollTrigger: {
+                trigger: projectSection,
+                start: "top 160%",
+                end: "top top",
+                scrub: desktop ? 0.5 : true,
+                invalidateOnRefresh: true,
+              },
+              defaults: { ease: "none" },
+            })
+              .to(".project-transition-panel", {
+                yPercent: 0,
+                duration: 0.18,
+                stagger: { amount: 0.1, from: "center" },
+                ease: "power3.inOut",
+              }, 0)
+              .to(".project-transition-logo", {
+                autoAlpha: 1,
+                scale: 1,
+                y: 0,
+                duration: 0.1,
+                ease: "power2.out",
+              }, 0.2)
+              .to(".project-transition-logo path", {
+                autoAlpha: 1,
+                y: 0,
+                scale: 1,
+                duration: 0.24,
+                stagger: 0.035,
+                ease: "power3.out",
+              }, 0.22)
+              .to(".project-bg-word", {
+                autoAlpha: 1,
+                duration: 0.16,
+              }, 0.48)
+              .to(".project-kicker, .project-headline, .project-subcopy", {
+                y: 0,
+                autoAlpha: 1,
+                duration: 0.24,
+                stagger: 0.04,
+                ease: "power3.out",
+              }, 0.52)
+              .to(".project-card", {
+                autoAlpha: 1,
+                x: 0,
+                duration: 0.34,
+                stagger: 0.055,
+                ease: "power3.out",
+              }, 0.52)
+              .to(".project-contours path", {
+                strokeDashoffset: 0,
+                duration: 0.32,
+                stagger: 0.03,
+              }, 0.56);
+
+            gsap.timeline({
+              scrollTrigger: {
+                trigger: projectSection,
+                start: "top top",
+                end: () => `+=${desktop ? projectDistance() + 900 : projectDistance() + 620}`,
+                pin: true,
+                scrub: desktop ? 0.58 : true,
+                anticipatePin: 0.6,
+                invalidateOnRefresh: true,
+              },
+              defaults: { ease: "none" },
+            })
+              .to(".project-transition-logo path", {
+                autoAlpha: 0,
+                y: -18,
+                scale: 0.98,
+                duration: 0.14,
+                stagger: { amount: 0.08, from: "end" },
+                ease: "power2.inOut",
+              }, 0)
+              .to(".project-transition-logo", {
+                autoAlpha: 0,
+                scale: 0.99,
+                y: -6,
+                duration: 0.18,
+                ease: "power2.inOut",
+              }, 0.04)
+              .to(".project-transition-panel", {
+                yPercent: (index) => (index % 2 === 0 ? -110 : 110),
+                duration: 0.22,
+                stagger: { amount: 0.14, from: "center" },
+                ease: "power3.inOut",
+              }, 0)
+              .to(".project-rail", {
+                x: () => -projectDistance(),
+                duration: 1,
+                ease: "none",
+              }, 0)
+              .to(".project-bg-word", {
+                xPercent: -18,
+                duration: 1,
+              }, 0);
+          }
 
           ScrollTrigger.create({
             start: 0,
@@ -868,6 +1052,67 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
         </div>
 
       </section>
+
+      <section className="project-story" aria-label="Project build log">
+        <div className="project-story-bg" aria-hidden="true" />
+        <svg className="project-contours" viewBox="0 0 1440 900" aria-hidden="true">
+          <path pathLength="1" d="M-140 190C78 24 238 48 365 166c126 117 41 254 161 347 142 110 262-95 435-18 168 75 123 279 321 287 132 5 207-78 312-172" />
+          <path pathLength="1" d="M96 828c172-126 313-99 424-28 120 77 198 142 356 77 189-77 150-273 350-322 140-34 245 12 350 96" />
+          <path pathLength="1" d="M392-88c126 98 208 194 184 360-24 170-130 202-83 331 54 148 216 113 294 246" />
+          <path pathLength="1" d="M1160-96c-42 176-19 306 82 392 128 109 266 39 332 174" />
+        </svg>
+
+        <div className="project-bg-word" aria-hidden="true">BUILD LOG</div>
+
+        <div className="project-copy project-copy-minimal">
+          <p className="project-kicker">02 — selected work</p>
+          <p className="project-subcopy">A few things I have been shaping, testing, and learning from.</p>
+        </div>
+
+        <div className="project-rail project-photo-rail" aria-label="Horizontal project gallery">
+          {projectStories.map((project, index) => (
+            <article className={`project-card project-photo-item project-photo-item-${index + 1}`} key={project.title}>
+              <div className="project-photo-caption">
+                <span>{project.title}</span>
+                <em>{project.year} / {project.label}</em>
+              </div>
+              <div className="project-photo-frame" aria-hidden="true">
+                <div className="project-shot">
+                  <span>{project.number}</span>
+                </div>
+              </div>
+            </article>
+          ))}
+          <article className="project-card project-photo-item project-photo-item-closing">
+            <div className="project-photo-caption">
+              <span>Still building</span>
+              <em>same habit / clearer each time</em>
+            </div>
+            <div className="project-photo-frame" aria-hidden="true">
+              <div className="project-shot">
+                <span>06</span>
+              </div>
+            </div>
+          </article>
+        </div>
+
+      </section>
+
+      <div className="project-transition-bars" aria-hidden="true">
+        {projectTransitionBars.map((bar) => (
+          <span className="project-transition-bar" key={bar}>
+            <i className="project-transition-panel" />
+          </span>
+        ))}
+      </div>
+
+      <div className="project-transition-logo" aria-hidden="true">
+        <svg className="cretivox-draw-logo" viewBox="0 0 3548 489" role="img">
+          {cretivoxLogoPaths.map((path, index) => (
+            <path d={path} key={index} />
+          ))}
+        </svg>
+      </div>
 
       {activeIntroPhoto !== null && (
         <div className="intro-photo-modal" role="dialog" aria-modal="true" aria-label={`${introPhotos[activeIntroPhoto].label} preview`} onClick={closeIntroPhoto}>
