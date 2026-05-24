@@ -582,10 +582,10 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
             }, 0)
             .to(".hero-wordmark", { "--hero-lockup-scale": desktop ? 0.88 : 0.82, duration: 0.72 }, 0.12)
             .to(".hero-scroll-frame", { "--hero-desat": 1, duration: 0.58 }, 0.34)
-            .to(".signature-stage", { autoAlpha: 1, duration: 0.16 }, 0.2)
-            .to(signatureMainPath, { strokeDashoffset: 0, duration: 0.78 }, 0.22)
-            .set(signatureFinalPath, { autoAlpha: 1 }, 1.04)
-            .to(signatureFinalPath, { strokeDashoffset: 0, duration: 0.22 }, 1.04);
+            .to(".signature-stage", { autoAlpha: 1, duration: 0.16 }, 0.14)
+            .to(signatureMainPath, { strokeDashoffset: 0, duration: 0.66 }, 0.18)
+            .set(signatureFinalPath, { autoAlpha: 1 }, 0.84)
+            .to(signatureFinalPath, { strokeDashoffset: 0, duration: 0.16 }, 0.84);
 
           const introStoryTl = gsap.timeline({
             scrollTrigger: {
