@@ -126,10 +126,88 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [activeIntroPhoto, outgoingIntroPhoto]);
 
+  useEffect(() => {
+    if (activeIntroPhoto !== null) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+
+    let targetY = window.scrollY;
+    let currentY = window.scrollY;
+    let frame = 0;
+    let isAnimating = false;
+    const lerp = 0.105;
+    const wheelMultiplier = 0.86;
+
+    const maxScroll = () => Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+    const clampScroll = (value: number) => Math.max(0, Math.min(maxScroll(), value));
+    const normalizeWheelDelta = (event: WheelEvent) => {
+      if (event.deltaMode === WheelEvent.DOM_DELTA_LINE) return event.deltaY * 16;
+      if (event.deltaMode === WheelEvent.DOM_DELTA_PAGE) return event.deltaY * window.innerHeight;
+      return event.deltaY;
+    };
+    const stopScrollAnimation = () => {
+      isAnimating = false;
+      window.cancelAnimationFrame(frame);
+    };
+    const tick = () => {
+      const distance = targetY - currentY;
+      currentY += distance * lerp;
+      window.scrollTo(0, currentY);
+      ScrollTrigger.update();
+
+      if (Math.abs(distance) < 0.42) {
+        currentY = targetY;
+        window.scrollTo(0, targetY);
+        ScrollTrigger.update();
+        stopScrollAnimation();
+        return;
+      }
+
+      frame = window.requestAnimationFrame(tick);
+    };
+    const startScrollAnimation = () => {
+      if (isAnimating) return;
+      isAnimating = true;
+      frame = window.requestAnimationFrame(tick);
+    };
+    const handleWheel = (event: WheelEvent) => {
+      if (event.ctrlKey || event.metaKey || event.defaultPrevented || !event.cancelable) return;
+
+      event.preventDefault();
+      targetY = clampScroll(targetY + normalizeWheelDelta(event) * wheelMultiplier);
+      startScrollAnimation();
+    };
+    const syncTargetToScroll = () => {
+      if (isAnimating) return;
+      targetY = window.scrollY;
+      currentY = window.scrollY;
+      ScrollTrigger.update();
+    };
+    const handleResize = () => {
+      targetY = clampScroll(targetY);
+      currentY = clampScroll(window.scrollY);
+      ScrollTrigger.refresh();
+    };
+
+    window.addEventListener("wheel", handleWheel, { passive: false });
+    window.addEventListener("scroll", syncTargetToScroll, { passive: true });
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      stopScrollAnimation();
+      window.removeEventListener("wheel", handleWheel);
+      window.removeEventListener("scroll", syncTargetToScroll);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [activeIntroPhoto]);
+
   useGSAP(
     () => {
       const root = container.current;
       if (!root) return;
+
+      gsap.ticker.lagSmoothing(1000, 16);
+      ScrollTrigger.config({ ignoreMobileResize: true });
 
       const cursor = root.querySelector<HTMLElement>(".dossier-cursor");
       const hero = root.querySelector<HTMLElement>(".dossier-hero");
@@ -489,7 +567,7 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
               start: "top top",
               end: desktop ? "+=1750" : "+=1200",
               pin: true,
-              scrub: true,
+              scrub: desktop ? 0.42 : true,
               anticipatePin: 1,
             },
             defaults: { ease: "none" },
@@ -515,7 +593,7 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
               start: "top top",
               end: desktop ? "+=5200" : "+=3600",
               pin: true,
-              scrub: true,
+              scrub: desktop ? 0.55 : true,
               anticipatePin: 1,
               onUpdate: (self) => {
                 const inCardFinale = self.progress > 0.69;

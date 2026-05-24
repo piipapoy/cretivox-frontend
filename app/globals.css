@@ -31,7 +31,7 @@
 html {
   background: var(--cream);
   color: var(--ink);
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
 }
 
 body {
@@ -3545,4 +3545,18 @@ button {
     filter: blur(8px);
     transform: translate3d(-42%, 0, 0) scale(0.985) rotate(-1.4deg);
   }
+}
+
+
+/* === Scroll feel fix ===
+   Let the custom desktop wheel easing control scroll position without browser-level
+   smooth-scroll fighting it. */
+html {
+  scroll-behavior: auto;
+}
+
+.dossier,
+.dossier-hero,
+.intro-story {
+  overscroll-behavior: none;
 }
