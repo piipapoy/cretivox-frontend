@@ -76,28 +76,25 @@ button {
   position: relative;
   display: grid;
   min-height: 100svh;
+  height: 100svh;
   place-items: center;
   overflow: hidden;
-  padding: clamp(14px, 3vw, 30px);
+  padding: 24px;
   background:
-    linear-gradient(to bottom, rgba(244, 239, 235, 0.1), var(--cream) 78%),
-    radial-gradient(circle at 72% 24%, rgba(128, 77, 250, 0.32), transparent 26rem),
-    radial-gradient(circle at 20% 75%, rgba(255, 107, 139, 0.2), transparent 22rem),
-    #211b32;
+    radial-gradient(circle at 50% 0%, rgba(181, 157, 248, 0.18), transparent 26rem),
+    var(--cream);
 }
 
 .login-shell::before {
-  content: "A";
+  content: "";
   position: absolute;
-  right: -3vw;
-  top: 50%;
-  transform: translateY(-50%);
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(244, 239, 235, 0.16);
-  font-family: var(--serif);
-  font-size: clamp(18rem, 52vw, 42rem);
-  font-weight: 900;
-  line-height: 0.75;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(21, 20, 18, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(21, 20, 18, 0.035) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: radial-gradient(circle at center, black, transparent 72%);
 }
 
 .login-noise {
@@ -112,32 +109,25 @@ button {
 .login-card {
   position: relative;
   z-index: 2;
-  width: min(1120px, 100%);
-  border: 3px solid var(--ink);
-  background: rgba(253, 250, 244, 0.88);
-  box-shadow: 10px 10px 0 var(--ink), 20px 20px 0 rgba(128, 77, 250, 0.45);
-  backdrop-filter: blur(16px);
+  width: min(420px, 100%);
+  border: 1px solid rgba(21, 20, 18, 0.14);
+  border-radius: 24px;
+  background: rgba(255, 250, 244, 0.92);
+  box-shadow: 0 26px 80px rgba(21, 20, 18, 0.12);
+  padding: clamp(28px, 4vw, 42px);
+  backdrop-filter: blur(14px);
 }
 
 .brand-strip {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-  padding: 16px 18px;
-  border-bottom: 3px solid var(--ink);
-  background: var(--ink);
-  color: var(--cream);
-  font-family: var(--mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  display: grid;
+  place-items: center;
+  margin-bottom: 34px;
 }
 
 .brand-strip img {
-  width: 146px;
+  width: 168px;
   height: auto;
-  filter: brightness(0) saturate(100%) invert(72%) sepia(19%) saturate(1436%) hue-rotate(214deg) brightness(100%) contrast(96%);
+  filter: brightness(0) saturate(100%) invert(14%) sepia(8%) saturate(515%) hue-rotate(353deg) brightness(93%) contrast(89%);
 }
 
 .login-grid {
@@ -196,13 +186,7 @@ button {
 .terminal-form {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: 18px;
-  border-left: 3px solid var(--ink);
-  padding: clamp(24px, 4vw, 46px);
-  background:
-    linear-gradient(135deg, rgba(128, 77, 250, 0.12), rgba(255, 255, 255, 0) 42%),
-    var(--cream-soft);
+  gap: 16px;
 }
 
 .terminal-topline {
@@ -234,49 +218,54 @@ button {
 
 .terminal-form label {
   display: grid;
-  gap: 9px;
-  color: var(--ink-soft);
+  gap: 8px;
+  color: rgba(21, 20, 18, 0.58);
   font-family: var(--mono);
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.11em;
   text-transform: uppercase;
 }
 
 .terminal-form input {
   width: 100%;
-  border: 2px solid var(--ink);
-  background: var(--cream);
+  border: 1px solid rgba(21, 20, 18, 0.18);
+  border-radius: 14px;
+  background: rgba(253, 250, 244, 0.88);
   color: var(--ink);
   padding: 15px 16px;
   outline: none;
-  box-shadow: 4px 4px 0 var(--parchment);
+  box-shadow: none;
+  font: inherit;
+  font-size: 0.95rem;
+  letter-spacing: 0;
+  text-transform: none;
 }
 
 .terminal-form input:focus {
   border-color: var(--violet);
-  box-shadow: 5px 5px 0 var(--violet-soft), 0 0 0 5px rgba(128, 77, 250, 0.13);
+  box-shadow: 0 0 0 4px rgba(128, 77, 250, 0.12);
 }
 
 .terminal-form button,
 .dossier-footer a {
-  border: 2px solid var(--ink);
+  border: 0;
+  border-radius: 999px;
   background: var(--ink);
   color: var(--cream);
-  padding: 12px 18px;
-  box-shadow: 5px 5px 0 var(--violet);
+  padding: 15px 18px;
+  box-shadow: none;
   font-family: var(--mono);
   font-size: 0.74rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  font-weight: 800;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, color 180ms ease;
+  transition: transform 180ms ease, background 180ms ease, opacity 180ms ease;
 }
 
 .terminal-form button:hover,
 .dossier-footer a:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 8px 8px 0 var(--violet);
+  transform: translateY(-1px);
   background: var(--violet);
 }
 
@@ -286,12 +275,12 @@ button {
 }
 
 .status-line {
-  min-height: 48px;
-  margin: 0;
+  margin: 2px 0 0;
   color: var(--violet-deep);
   font-family: var(--mono);
-  font-size: 0.78rem;
-  line-height: 1.55;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  text-align: center;
 }
 
 .dossier {
@@ -1210,6 +1199,7 @@ button {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -1219,6 +1209,7 @@ button {
   from {
     clip-path: circle(0% at 50% 50%);
   }
+
   to {
     clip-path: circle(145% at 50% 50%);
   }
@@ -1229,6 +1220,7 @@ button {
     opacity: 0;
     transform: translateY(18px) scale(0.86) rotate(-1.5deg);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1) rotate(0deg);
@@ -1240,9 +1232,11 @@ button {
     opacity: 1;
     transform: translateX(-108%) scale(0.985);
   }
+
   18% {
     opacity: 1;
   }
+
   to {
     opacity: 1;
     transform: translateX(0) scale(1);
@@ -1254,9 +1248,11 @@ button {
     opacity: 1;
     transform: translateX(108%) scale(0.985);
   }
+
   18% {
     opacity: 1;
   }
+
   to {
     opacity: 1;
     transform: translateX(0) scale(1);
@@ -1268,6 +1264,7 @@ button {
     opacity: 1;
     transform: translateX(0) scale(1);
   }
+
   to {
     opacity: 1;
     transform: translateX(108%) scale(0.985);
@@ -1279,6 +1276,7 @@ button {
     opacity: 1;
     transform: translateX(0) scale(1);
   }
+
   to {
     opacity: 1;
     transform: translateX(-108%) scale(0.985);
@@ -1290,6 +1288,7 @@ button {
     opacity: 0;
     transform: scale(0.86);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
@@ -1329,6 +1328,7 @@ button {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .intro-photo-modal,
   .intro-photo-modal::before,
   .intro-modal-card,
@@ -1790,7 +1790,9 @@ button {
   color: var(--ink);
 }
 
-@media (hover: none), (pointer: coarse) {
+@media (hover: none),
+(pointer: coarse) {
+
   .dossier,
   body,
   a,
@@ -1805,6 +1807,7 @@ button {
 }
 
 @media (max-width: 980px) {
+
   .login-grid,
   .dossier-hero,
   .intro-story,
@@ -2406,6 +2409,13 @@ button {
   }
 }
 
+@media (min-width: 1600px) and (min-height: 900px) {
+  .intro-stage-a .intro-front {
+    width: min(27vw, 550px);
+    bottom: -8vh;
+  }
+}
+
 
 
 /* === Remove giant shared-background ellipse rings ===
@@ -2526,10 +2536,10 @@ button {
 }
 
 .intro-dissolve-cell {
-  border-color: rgba(255,250,244,0.24) !important;
+  border-color: rgba(255, 250, 244, 0.24) !important;
   background: linear-gradient(135deg, rgba(190, 173, 250, 0.9), rgba(126, 78, 251, 0.8)) !important;
-  color: rgba(255,250,244,0.95) !important;
-  box-shadow: 0 0 16px rgba(189, 172, 250, 0.26), inset 0 1px 0 rgba(255,255,255,0.14) !important;
+  color: rgba(255, 250, 244, 0.95) !important;
+  box-shadow: 0 0 16px rgba(189, 172, 250, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
 }
 
 
@@ -2540,8 +2550,13 @@ button {
   pointer-events: none;
 }
 
-.intro-stage-a { z-index: 8; }
-.intro-stage-b { z-index: 9; }
+.intro-stage-a {
+  z-index: 8;
+}
+
+.intro-stage-b {
+  z-index: 9;
+}
 
 .intro-dissolve-grid {
   z-index: 60 !important;
@@ -2553,7 +2568,7 @@ button {
   background: linear-gradient(135deg, rgba(189, 169, 249, 0.92), rgba(122, 72, 249, 0.82)) !important;
   border: 1px solid rgba(255, 251, 245, 0.2) !important;
   color: rgba(255, 251, 245, 0.95) !important;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 0 14px rgba(168, 136, 248, 0.2) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 0 14px rgba(168, 136, 248, 0.2) !important;
 }
 
 
@@ -2622,7 +2637,7 @@ button {
   min-height: calc(100% + 1px) !important;
   box-shadow:
     inset 0 0 0 1px rgba(255, 250, 244, 0.34),
-    inset 0 1px 0 rgba(255,255,255,0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.10),
     0 0 14px rgba(168, 136, 248, 0.18) !important;
   background-clip: padding-box !important;
 }
@@ -2675,7 +2690,7 @@ button {
   color: rgb(255, 250, 244) !important;
   box-shadow:
     inset 0 0 0 1px rgba(255, 250, 244, 0.34),
-    inset 0 1px 0 rgba(255,255,255,0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.10),
     0 0 14px rgba(168, 136, 248, 0.18) !important;
 }
 
@@ -2962,12 +2977,13 @@ button {
 }
 
 /* Make sure the previous full side-profile stage is fully gone during the card finale. */
-.intro-photo-cards ~ .intro-side,
-.intro-photo-cards ~ .intro-center-copy {
+.intro-photo-cards~.intro-side,
+.intro-photo-cards~.intro-center-copy {
   pointer-events: none;
 }
 
 @media (max-width: 899px) {
+
   .intro-photo-card:hover,
   .intro-photo-card:focus-visible {
     box-shadow:
@@ -3391,6 +3407,7 @@ button {
 }
 
 @media (min-width: 1600px) {
+
   .intro-photo-card,
   .intro-card-center {
     top: 80% !important;
@@ -3493,10 +3510,12 @@ button {
     filter: blur(8px);
     transform: translate3d(-42%, 0, 0) scale(0.985) rotate(-1.4deg);
   }
+
   45% {
     opacity: 0.78;
     filter: blur(2px);
   }
+
   100% {
     opacity: 1;
     filter: blur(0);
@@ -3510,10 +3529,12 @@ button {
     filter: blur(8px);
     transform: translate3d(42%, 0, 0) scale(0.985) rotate(1.4deg);
   }
+
   45% {
     opacity: 0.78;
     filter: blur(2px);
   }
+
   100% {
     opacity: 1;
     filter: blur(0);
@@ -3527,6 +3548,7 @@ button {
     filter: blur(0);
     transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
   }
+
   100% {
     opacity: 0;
     filter: blur(8px);
@@ -3540,6 +3562,7 @@ button {
     filter: blur(0);
     transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
   }
+
   100% {
     opacity: 0;
     filter: blur(8px);
@@ -3925,7 +3948,7 @@ html {
 /* === TRUE overlap bars fix ===
    The bars are now a direct child of .dossier, not inside .project-story.
    That prevents clipping, so the transition happens over the photo-card section first. */
-.dossier > .project-transition-bars {
+.dossier>.project-transition-bars {
   position: fixed !important;
   inset: 0 !important;
   z-index: 1400 !important;
@@ -3936,13 +3959,13 @@ html {
   contain: layout paint;
 }
 
-.dossier > .project-transition-bars .project-transition-bar {
+.dossier>.project-transition-bars .project-transition-bar {
   position: relative;
   display: block;
   overflow: hidden;
 }
 
-.dossier > .project-transition-bars .project-transition-panel {
+.dossier>.project-transition-bars .project-transition-panel {
   position: absolute;
   inset: -1px;
   display: block;
@@ -3960,7 +3983,7 @@ html {
    Bars now fully cover the screen before the project scroll is visible.
    They stay closed while the browser moves into the project section, then open
    only after the project section is pinned at the top. */
-.dossier > .project-transition-bars {
+.dossier>.project-transition-bars {
   z-index: 2200 !important;
 }
 
@@ -3986,8 +4009,7 @@ html {
   height: auto;
   overflow: visible;
   filter:
-    drop-shadow(0 0 18px rgba(255, 250, 244, 0.18))
-    drop-shadow(0 18px 42px rgba(0, 0, 0, 0.24));
+    drop-shadow(0 0 18px rgba(255, 250, 244, 0.18)) drop-shadow(0 18px 42px rgba(0, 0, 0, 0.24));
 }
 
 .cretivox-draw-logo path {
@@ -4166,7 +4188,7 @@ html {
 .project-photo-frame {
   position: relative;
   overflow: hidden;
-  border-radius: 0;
+  border-radius: clamp(10px, 0.9vw, 16px);
   background: rgba(21, 20, 18, 0.06);
   box-shadow: 0 22px 64px rgba(21, 20, 18, 0.12);
 }
@@ -4211,7 +4233,7 @@ html {
   position: absolute !important;
   inset: 0 !important;
   height: auto !important;
-  border-radius: 0 !important;
+  border-radius: inherit !important;
   background:
     linear-gradient(135deg, rgba(21, 20, 18, 0.10), rgba(21, 20, 18, 0.02)),
     radial-gradient(circle at 68% 24%, rgba(128, 77, 250, 0.18), transparent 22rem),
@@ -4246,39 +4268,39 @@ html {
 .project-photo-item-1 {
   width: clamp(260px, 27vw, 520px) !important;
   height: clamp(310px, 49vh, 560px) !important;
-  transform: translateY(6vh) rotate(-1.5deg);
+  transform: translateY(6vh);
 }
 
 .project-photo-item-2 {
   width: clamp(180px, 16vw, 300px) !important;
   height: clamp(220px, 34vh, 380px) !important;
-  transform: translateY(-16vh) rotate(1.2deg);
+  transform: translateY(-16vh);
   opacity: 0.78;
 }
 
 .project-photo-item-3 {
   width: clamp(340px, 34vw, 640px) !important;
   height: clamp(330px, 57vh, 620px) !important;
-  transform: translateY(2vh) rotate(0deg);
+  transform: translateY(2vh);
 }
 
 .project-photo-item-4 {
   width: clamp(220px, 20vw, 390px) !important;
   height: clamp(250px, 38vh, 430px) !important;
-  transform: translateY(-9vh) rotate(-0.8deg);
+  transform: translateY(-9vh);
 }
 
 .project-photo-item-5 {
   width: clamp(260px, 23vw, 460px) !important;
   height: clamp(270px, 42vh, 480px) !important;
-  transform: translateY(15vh) rotate(1.4deg);
+  transform: translateY(15vh);
   opacity: 0.86;
 }
 
 .project-photo-item-closing {
   width: clamp(300px, 28vw, 520px) !important;
   height: clamp(290px, 50vh, 560px) !important;
-  transform: translateY(-1vh) rotate(-1deg);
+  transform: translateY(-1vh);
 }
 
 .project-photo-item .project-photo-frame {
@@ -4430,6 +4452,7 @@ html {
   from {
     opacity: 1;
   }
+
   to {
     opacity: 0;
   }
@@ -4441,6 +4464,7 @@ html {
     transform: scale(1);
     filter: blur(0);
   }
+
   to {
     opacity: 0;
     transform: scale(0.96);
@@ -4454,6 +4478,7 @@ html {
     transform: translateY(0) scale(1);
     filter: blur(0);
   }
+
   to {
     opacity: 0;
     transform: translateY(26px) scale(0.94);
@@ -4466,6 +4491,7 @@ html {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
+
   to {
     opacity: 0;
     transform: translateY(8px) scale(0.92);
@@ -4712,4 +4738,145 @@ html {
 
 .footer-link {
   margin-top: clamp(26px, 4.2vw, 56px) !important;
+}
+
+/* === Real project image previews ===
+   Uses the files in /public/assets/projects and keeps the existing varied photo-wall layout.
+   Landscape screenshots use cover/crop; the tall Ma'rifah mobile screen is contained so it still reads. */
+.project-photo-item .project-shot {
+  background: #d8d0c7 !important;
+}
+
+.project-photo-image {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+  transform: translateZ(0);
+}
+
+.project-photo-item .project-shot::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 2 !important;
+  width: auto !important;
+  height: auto !important;
+  border-radius: 0 !important;
+  background: linear-gradient(180deg, transparent 48%, rgba(21, 20, 18, 0.42) 100%) !important;
+  filter: none !important;
+  pointer-events: none !important;
+}
+
+.project-photo-item .project-shot::after {
+  display: none !important;
+  content: none !important;
+}
+
+.project-photo-item .project-shot span {
+  z-index: 3 !important;
+  text-shadow: 0 10px 28px rgba(21, 20, 18, 0.32);
+}
+
+.project-photo-sampahkita .project-photo-image,
+.project-photo-gymai .project-photo-image,
+.project-photo-peduli-kucing .project-photo-image {
+  object-position: center top;
+}
+
+.project-photo-ma-rifah-eduapp .project-shot {
+  background:
+    radial-gradient(circle at 52% 40%, rgba(128, 77, 250, 0.16), transparent 22rem),
+    linear-gradient(135deg, rgba(21, 20, 18, 0.08), rgba(21, 20, 18, 0.02)),
+    #d8d0c7 !important;
+}
+
+.project-photo-ma-rifah-eduapp .project-photo-image {
+  object-fit: cover;
+  object-position: center center;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.project-photo-tapcook .project-photo-image {
+  object-position: center center;
+}
+
+/* Hover reveal: keep each project anchored while expanding the cropped frame. */
+.project-photo-item {
+  position: relative;
+  z-index: 1;
+}
+
+.project-photo-item:hover,
+.project-photo-item:focus-within {
+  z-index: 40;
+}
+
+.project-photo-item .project-photo-frame {
+  transition:
+    width 460ms var(--ease-out),
+    height 460ms var(--ease-out),
+    transform 460ms var(--ease-out),
+    border-radius 460ms var(--ease-out),
+    box-shadow 460ms var(--ease-out);
+  will-change: width, height, transform;
+}
+
+.project-photo-item .project-photo-image {
+  transition: filter 460ms var(--ease-out), transform 460ms var(--ease-out);
+}
+
+.project-photo-item:hover .project-photo-frame,
+.project-photo-item:focus-within .project-photo-frame {
+  width: var(--project-reveal-width) !important;
+  height: var(--project-reveal-height) !important;
+  border-radius: clamp(10px, 0.9vw, 16px);
+  box-shadow: 0 34px 90px rgba(21, 20, 18, 0.2);
+  transform: translate(var(--project-reveal-x, 0), var(--project-reveal-y, 0));
+}
+
+.project-photo-item:hover .project-photo-image,
+.project-photo-item:focus-within .project-photo-image {
+  filter: saturate(1.02) contrast(1.02);
+  transform: scale(1.001);
+}
+
+.project-photo-gymai {
+  --project-reveal-width: clamp(460px, 42vw, 700px);
+  --project-reveal-height: clamp(259px, 23.6vw, 394px);
+  --project-reveal-x: clamp(-110px, -5vw, -70px);
+  --project-reveal-y: 2vh;
+}
+
+.project-photo-sampahkita {
+  --project-reveal-width: clamp(400px, 35vw, 600px);
+  --project-reveal-height: clamp(225px, 19.7vw, 338px);
+  --project-reveal-x: clamp(-170px, -8vw, -90px);
+  --project-reveal-y: -2vh;
+}
+
+.project-photo-peduli-kucing {
+  --project-reveal-width: clamp(560px, 50vw, 820px);
+  --project-reveal-height: clamp(315px, 28.1vw, 461px);
+  --project-reveal-x: clamp(-160px, -7vw, -90px);
+  --project-reveal-y: 0;
+}
+
+.project-photo-ma-rifah-eduapp {
+  --project-reveal-width: clamp(250px, 19vw, 330px);
+  --project-reveal-height: clamp(542px, 41.1vw, 716px);
+  --project-reveal-x: clamp(-24px, -1.2vw, -12px);
+  --project-reveal-y: clamp(-190px, -10vw, -118px);
+}
+
+.project-photo-tapcook {
+  --project-reveal-width: clamp(280px, 23vw, 390px);
+  --project-reveal-height: clamp(373px, 30.7vw, 520px);
+  --project-reveal-x: clamp(-42px, -1.8vw, -18px);
+  --project-reveal-y: clamp(-112px, -6vw, -72px);
 }

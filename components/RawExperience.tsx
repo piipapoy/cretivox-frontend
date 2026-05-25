@@ -32,20 +32,20 @@ const marqueeText = "FRONTEND ENDURANCE TEST CRETIVOX";
 
 const introPhotos = [
   {
-    src: "/assets/fierce/fierce-left.png",
-    removedSrc: "/assets/fierce/fierce-left-removed.png",
+    src: "/assets/fierce/fierce-left-current.png",
+    removedSrc: "/assets/fierce/fierce-left-removed-current.png",
     number: "01",
     label: "left profile",
   },
   {
-    src: "/assets/fierce/fierce-front.png",
-    removedSrc: "/assets/fierce/fierce-front-removed.png",
+    src: "/assets/fierce/fierce-front-current.png",
+    removedSrc: "/assets/fierce/fierce-front-removed-current.png",
     number: "02",
     label: "front portrait",
   },
   {
-    src: "/assets/fierce/fierce-right.png",
-    removedSrc: "/assets/fierce/fierce-right-removed.png",
+    src: "/assets/fierce/fierce-right-current.png",
+    removedSrc: "/assets/fierce/fierce-right-removed-current.png",
     number: "03",
     label: "right profile",
   },
@@ -56,41 +56,66 @@ const projectStories = [
     number: "01",
     year: "2026",
     title: "GymAI",
-    label: "frontend flow",
-    note: "A product flow for tracking routines, reading progress, and making workout decisions feel simple.",
-    proof: "layout hierarchy / dashboard thinking / reusable UI",
+    label: "AI fitness planner",
+    image: {
+      src: "/assets/projects/gymai.png",
+      width: 1920,
+      height: 1080,
+    },
+    note: "A fitness planner that turns body metrics and goals into clear workout recommendations and a dashboard users can actually follow.",
+    proof: "form UX / dashboard thinking / frontend",
   },
   {
     number: "02",
-    year: "2026",
-    title: "SampahKita",
-    label: "public app",
-    note: "Turning a serious topic into an interface that feels approachable, clear, and easy to move through.",
-    proof: "information design / navigation / mobile-first structure",
+    year: "2025",
+    title: "SampahKita!",
+    label: "civic reporting app",
+    image: {
+      src: "/assets/projects/sampahkita.png",
+      width: 1920,
+      height: 1080,
+    },
+    note: "A community waste reporting platform that turns trash reports, user activity, and environmental action into a simple public flow.",
+    proof: "full-stack build / reporting UX / civic product",
   },
   {
     number: "03",
-    year: "2025",
-    title: "Qiroaat",
-    label: "learning interface",
-    note: "A text-heavy experience shaped with spacing, rhythm, and hierarchy so the content does not feel dead.",
-    proof: "readability / content structure / visual restraint",
+    year: "2026",
+    title: "Peduli Kucing",
+    label: "rescue platform",
+    image: {
+      src: "/assets/projects/pedulikucing.png",
+      width: 1920,
+      height: 1080,
+    },
+    note: "A stray cat rescue platform built around quick sighting reports, adoption discovery, and donation-friendly community support.",
+    proof: "reporting flow / community UX / frontend",
   },
   {
     number: "04",
-    year: "2025",
-    title: "Motion Cuts",
-    label: "editing instinct",
-    note: "Video editing trained the same thing I use in frontend: timing, pacing, and knowing when a moment should land.",
-    proof: "motion taste / transition rhythm / storytelling",
+    year: "2023",
+    title: "Ma'rifah EduApp",
+    label: "mobile learning UI",
+    image: {
+      src: "/assets/projects/marifah.png",
+      width: 860,
+      height: 1864,
+    },
+    note: "An Islamic learning app concept with structured modules, daily worship tools, and a calmer way to move through dense topics.",
+    proof: "mobile UI/UX / learning flow / research",
   },
   {
     number: "05",
     year: "2026",
-    title: "Raw Signal",
-    label: "personal system",
-    note: "A one-page identity experiment built around scroll, type, interaction, and how I want people to read me.",
-    proof: "GSAP / visual direction / end-to-end build",
+    title: "TapCook",
+    label: "IoT cooking system",
+    image: {
+      src: "/assets/projects/tapcook.jpeg",
+      width: 1200,
+      height: 1600,
+    },
+    note: "A smart stove concept with RFID access, MQTT relay control, and a FastAPI dashboard for monitoring the cooking flow.",
+    proof: "IoT flow / dashboard UI / system integration",
   },
 ];
 
@@ -755,7 +780,7 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
               autoAlpha: 0,
               x: (index) => (desktop ? window.innerWidth * 0.56 + index * 34 : window.innerWidth * 0.34),
               y: (index) => [-34, 92, -82, 46, -18, 70][index % 6],
-              rotate: (index) => [-2.5, 1.5, 0, -1, 2, -1.5][index % 6],
+              rotate: 0,
             });
             gsap.set(".project-kicker, .project-headline, .project-subcopy", { autoAlpha: 0, y: 34 });
             gsap.set(".project-bg-word", { autoAlpha: 0, xPercent: 0 });
@@ -768,17 +793,17 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
             gsap.timeline({
               scrollTrigger: {
                 trigger: projectSection,
-                start: "top 118%",
+                start: "top 150%",
                 end: "top top",
-                scrub: desktop ? 0.5 : true,
+                scrub: desktop ? 0.72 : true,
                 invalidateOnRefresh: true,
               },
               defaults: { ease: "none" },
             })
               .to(".project-transition-panel", {
                 yPercent: 0,
-                duration: 0.18,
-                stagger: { amount: 0.1, from: "center" },
+                duration: 0.28,
+                stagger: { amount: 0.16, from: "center" },
                 ease: "power3.inOut",
               }, 0)
               .to(".project-transition-logo", {
@@ -810,6 +835,7 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
               .to(".project-card", {
                 autoAlpha: 1,
                 x: 0,
+                rotate: 0,
                 duration: 0.34,
                 stagger: 0.055,
                 ease: "power3.out",
@@ -1066,16 +1092,16 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
           </section>
 
           <figure className="intro-front" aria-label="Front fierce portrait placeholder">
-            <Image src="/assets/fierce/fierce-front-removed.png" alt="front fierce placeholder" width={941} height={1672} />
+            <Image src={introPhotos[1].removedSrc} alt="front fierce placeholder" width={941} height={1672} />
           </figure>
         </div>
 
         <div className="intro-stage intro-stage-b">
           <figure className="intro-side intro-side-left" aria-label="Left side fierce portrait placeholder facing inward">
-            <Image src="/assets/fierce/fierce-right-removed.png" alt="left inward fierce placeholder" width={941} height={1672} />
+            <Image src={introPhotos[2].removedSrc} alt="left inward fierce placeholder" width={941} height={1672} />
           </figure>
           <figure className="intro-side intro-side-right" aria-label="Right side fierce portrait placeholder facing inward">
-            <Image src="/assets/fierce/fierce-left-removed.png" alt="right inward fierce placeholder" width={941} height={1672} />
+            <Image src={introPhotos[0].removedSrc} alt="right inward fierce placeholder" width={941} height={1672} />
           </figure>
 
           <section className="intro-center-copy">
@@ -1126,29 +1152,27 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
 
         <div className="project-rail project-photo-rail" aria-label="Horizontal project gallery">
           {projectStories.map((project, index) => (
-            <article className={`project-card project-photo-item project-photo-item-${index + 1}`} key={project.title}>
+            <article className={`project-card project-photo-item project-photo-item-${index + 1} project-photo-${project.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`} key={project.title}>
               <div className="project-photo-caption">
                 <span>{project.title}</span>
                 <em>{project.year} / {project.label}</em>
               </div>
               <div className="project-photo-frame" aria-hidden="true">
                 <div className="project-shot">
+                  <Image
+                    className="project-photo-image"
+                    src={project.image.src}
+                    alt={`${project.title} project preview`}
+                    width={project.image.width}
+                    height={project.image.height}
+                    sizes="(max-width: 899px) 70vw, 42vw"
+                    unoptimized
+                  />
                   <span>{project.number}</span>
                 </div>
               </div>
             </article>
           ))}
-          <article className="project-card project-photo-item project-photo-item-closing">
-            <div className="project-photo-caption">
-              <span>Still building</span>
-              <em>same habit / clearer each time</em>
-            </div>
-            <div className="project-photo-frame" aria-hidden="true">
-              <div className="project-shot">
-                <span>06</span>
-              </div>
-            </div>
-          </article>
         </div>
 
       </section>
