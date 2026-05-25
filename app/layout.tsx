@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "RAW Signal - Raffa Mizanul",
+  title: "Endurance Test",
   description:
     "A Cretivox Frontend Endurance Test microsite by M. Raffa Mizanul Insan.",
 };

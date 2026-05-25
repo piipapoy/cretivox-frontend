@@ -62,8 +62,6 @@ const projectStories = [
       width: 1920,
       height: 1080,
     },
-    note: "A fitness planner that turns body metrics and goals into clear workout recommendations and a dashboard users can actually follow.",
-    proof: "form UX / dashboard thinking / frontend",
   },
   {
     number: "02",
@@ -75,8 +73,6 @@ const projectStories = [
       width: 1920,
       height: 1080,
     },
-    note: "A community waste reporting platform that turns trash reports, user activity, and environmental action into a simple public flow.",
-    proof: "full-stack build / reporting UX / civic product",
   },
   {
     number: "03",
@@ -88,8 +84,6 @@ const projectStories = [
       width: 1920,
       height: 1080,
     },
-    note: "A stray cat rescue platform built around quick sighting reports, adoption discovery, and donation-friendly community support.",
-    proof: "reporting flow / community UX / frontend",
   },
   {
     number: "04",
@@ -101,8 +95,6 @@ const projectStories = [
       width: 860,
       height: 1864,
     },
-    note: "An Islamic learning app concept with structured modules, daily worship tools, and a calmer way to move through dense topics.",
-    proof: "mobile UI/UX / learning flow / research",
   },
   {
     number: "05",
@@ -114,8 +106,6 @@ const projectStories = [
       width: 1200,
       height: 1600,
     },
-    note: "A smart stove concept with RFID access, MQTT relay control, and a FastAPI dashboard for monitoring the cooking flow.",
-    proof: "IoT flow / dashboard UI / system integration",
   },
 ];
 
@@ -591,10 +581,9 @@ export default function RawExperience({ onReset }: RawExperienceProps) {
           const dissolveCellData = dissolveCellElements.map((cell, index) => {
             const row = Math.floor(index / dissolveColumns);
             const col = index % dissolveColumns;
-            const y = dissolveRows <= 1 ? 0 : row / (dissolveRows - 1);
             const threshold = 0.08 + hash(row, col, 1) * 0.68;
             const scatter = (hash(row, col, 2) - 0.5) * 0.22;
-            return { cell, row, col, y, threshold, scatter };
+            return { cell, row, col, threshold, scatter };
           });
           const hideDissolveCells = () => {
             dissolveCellData.forEach(({ cell }) => {
